@@ -1,13 +1,13 @@
-﻿using MatoEditor.Views;
+﻿using MatoEditor.Services;
 
 namespace MatoEditor.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public Category Category { get; set; }
+    public CategoryViewModel CategoryViewModel { get; }
 
-    public MainWindowViewModel()
+    public MainWindowViewModel(IFileSystemService fileSystemService)
     {
-        Category = new Category();
+        CategoryViewModel = new CategoryViewModel(fileSystemService);
     }
 }
