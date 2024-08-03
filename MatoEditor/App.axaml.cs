@@ -7,6 +7,7 @@ using MatoEditor.ViewModels;
 using MatoEditor.Views;
 using MatoEditor.Services;
 using Microsoft.Extensions.DependencyInjection;
+using AvaloniaWebView;
 
 namespace MatoEditor;
 
@@ -19,6 +20,11 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
+    public override void RegisterServices()
+    {
+        base.RegisterServices();
+        AvaloniaWebViewBuilder.Initialize(default);
+    }
     public override void OnFrameworkInitializationCompleted()
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

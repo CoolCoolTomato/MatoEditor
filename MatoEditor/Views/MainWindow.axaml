@@ -25,7 +25,7 @@
                 <views:DocumentTree DataContext="{Binding DocumentTreeViewModel}"/>
             </SplitView.Pane>
             <Grid>
-                <TextBlock Text="XXX"></TextBlock>
+                <views:Editor DataContext="{Binding EditorViewModel}"/>
             </Grid>
         </SplitView>
     </DockPanel>
