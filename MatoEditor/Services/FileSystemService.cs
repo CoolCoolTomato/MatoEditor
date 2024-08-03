@@ -8,53 +8,68 @@ namespace MatoEditor.Services;
 
 public class FileSystemService : IFileSystemService
 {
-    public async Task<IEnumerable<FileSystemInfo>> GetDirectoryContentsAsync(string path)
+    public async Task<bool> DirectoryExistsAsync(string path)
+    {
+        try
+        {
+            return await Task.FromResult(Directory.Exists(path));
+        }
+        catch (Exception)
+        {
+            return false;
+        }        
+    }
+    public async Task<IEnumerable<DirectoryInfo>> GetSubDirectories(string path)
     {
         try
         {
             return await Task.Run(() =>
             {
                 var directory = new DirectoryInfo(path);
-                return directory.EnumerateFileSystemInfos();
+                return directory.EnumerateDirectories();
             });
         }
         catch (Exception)
         {
-            return Enumerable.Empty<FileSystemInfo>();
+            return Enumerable.Empty<DirectoryInfo>();
         }
     }
-    public Task<bool> DirectoryExistsAsync(string path)
+    public async Task<IEnumerable<FileInfo>> GetFiles(string path)
     {
         try
         {
-            return Task.FromResult(Directory.Exists(path));
+            return await Task.Run(() =>
+            {
+                var directory = new DirectoryInfo(path);
+                return directory.EnumerateFiles();
+            });
         }
         catch (Exception)
         {
-            return Task.FromResult(false);
-        }        
+            return Enumerable.Empty<FileInfo>();
+        }
     }
-    public Task<bool> CreateDirectoryAsync(string path)
+    public async Task<bool> CreateDirectoryAsync(string path)
     {
         try
         {
-            Task.Run(() => Directory.CreateDirectory(path));
-            return Task.FromResult(false);
+            await Task.Run(() => Directory.CreateDirectory(path));
+            return true;
         }
         catch (Exception)
         {
-            return Task.FromResult(false);
+            return false;
         }
     }
-    public Task<bool> FileExistsAsync(string path)
+    public async Task<bool> FileExistsAsync(string path)
     {
         try
         {
-            return Task.FromResult(File.Exists(path));
+            return await Task.FromResult(File.Exists(path));
         }
         catch (Exception)
         {
-            return Task.FromResult(false);
+            return false;
         }
     }
     public async Task<bool> CreateFileAsync(string path)

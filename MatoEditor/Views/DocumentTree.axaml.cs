@@ -2,9 +2,9 @@
 
 namespace MatoEditor.Views;
 
-public partial class Category : UserControl
+public partial class DocumentTree : UserControl
 {
-    public Category()
+    public DocumentTree()
     {
         InitializeComponent();
     }

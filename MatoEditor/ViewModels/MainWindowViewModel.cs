@@ -4,10 +4,10 @@ namespace MatoEditor.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-    public CategoryViewModel CategoryViewModel { get; }
+    public DocumentTreeViewModel DocumentTreeViewModel { get; }
 
     public MainWindowViewModel(IFileSystemService fileSystemService)
     {
-        CategoryViewModel = new CategoryViewModel(fileSystemService);
+        DocumentTreeViewModel = new DocumentTreeViewModel(fileSystemService);
     }
 }

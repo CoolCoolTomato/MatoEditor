@@ -20,9 +20,13 @@
                 <MenuItem Header="_Import"></MenuItem>
             </MenuItem>
         </Menu>
-        <DockPanel>
-            <views:Category DataContext="{Binding CategoryViewModel}" DockPanel.Dock="Left"/>
-            <TextBlock/>
-        </DockPanel>
+        <SplitView IsPaneOpen="True" DisplayMode="Inline" OpenPaneLength="300">
+            <SplitView.Pane>
+                <views:DocumentTree DataContext="{Binding DocumentTreeViewModel}"/>
+            </SplitView.Pane>
+            <Grid>
+                <TextBlock Text="XXX"></TextBlock>
+            </Grid>
+        </SplitView>
     </DockPanel>
 </Window>
