@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MatoEditor.Views.DocumentTree"
              x:DataType="viewModels:DocumentTreeViewModel">
-    <TreeView ItemsSource="{Binding DocumentTree}">
+    <TreeView ItemsSource="{Binding DocumentTree}" Background="White">
         <TreeView.ItemTemplate>
             <TreeDataTemplate ItemsSource="{Binding SubNodes}">
                 <TextBlock Text="{Binding Name}"/>

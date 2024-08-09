@@ -3,13 +3,28 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:MatoEditor.ViewModels"
-             xmlns:AvaloniaEdit="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+             xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+             xmlns:utils="clr-namespace:MatoEditor.utils"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MatoEditor.Views.Editor"
              x:DataType="viewModels:EditorViewModel">
     <Grid ColumnDefinitions="*, 4, *">
-        <AvaloniaEdit:TextEditor Grid.Column="0"/>
+        <avaloniaEdit:TextEditor
+                       Margin="0"
+                       Background="White"
+                       Foreground="Black"
+                       SyntaxHighlighting="C#"
+                       HorizontalScrollBarVisibility="Auto"
+                       VerticalScrollBarVisibility="Auto"
+                       FontFamily="{DynamicResource CodeFontFamily}" 
+                       FontWeight="Normal" 
+                       FontSize="14"
+                       WordWrap="True">
+            <Interaction.Behaviors>
+                <utils:AvalonEditBehavior Text="{Binding ContentString, Mode=TwoWay}"/>
+            </Interaction.Behaviors>
+        </avaloniaEdit:TextEditor>
         <GridSplitter Grid.Column="1" Background="#303030" ResizeDirection="Columns"/>
-        <WebView HtmlContent="{Binding html}" Grid.Column="2"/>
+        <WebView HtmlContent="{Binding ContentHtml}" Grid.Column="2"/>
     </Grid>
 </UserControl>
