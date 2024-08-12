@@ -47,6 +47,7 @@ public partial class App : Application
     private void ConfigureServices(IServiceCollection services)
     {
         services.AddSingleton<IFileSystemService, FileSystemService>();
+        services.AddSingleton<StorageService>();
         services.AddTransient<MainWindowViewModel>();
     }
 }

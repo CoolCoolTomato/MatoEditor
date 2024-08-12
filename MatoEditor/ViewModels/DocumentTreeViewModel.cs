@@ -2,14 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Controls.Models.TreeDataGrid;
-using Avalonia.Controls.Primitives;
-using Avalonia.Controls.Templates;
-using Avalonia.Layout;
 using MatoEditor.Models;
 using MatoEditor.Services;
 using ReactiveUI;
@@ -18,23 +10,32 @@ namespace MatoEditor.ViewModels;
 
 public class DocumentTreeViewModel : ViewModelBase
 {
-    public DocumentTreeViewModel(IFileSystemService fileSystemService)
+    public DocumentTreeViewModel(IFileSystemService fileSystemService, StorageService storageService)
     {
         _fileSystemService = fileSystemService;
+        _storageService = storageService;
+        RootNode = new DocumentTreeNode
+        {
+            Name = "Artices"
+        };
+        _storageService.WhenAnyValue(x => x.RootDirectoryPath).Subscribe(RootDirectoryPath => RootNode.Path = RootDirectoryPath);
         BuildDocumentTree();
     }
     private readonly IFileSystemService _fileSystemService;
+    private StorageService _storageService;
 
+    private DocumentTreeNode _rootNode;
+    public DocumentTreeNode RootNode
+    {
+        get => _rootNode;
+        set => this.RaiseAndSetIfChanged(ref _rootNode, value);
+    }
+    
     public ObservableCollection<DocumentTreeNode> DocumentTree { get; set; }
 
     private async void BuildDocumentTree()
     {
-        DocumentTreeNode rootNode = new DocumentTreeNode()
-        {
-            Name = "articles",
-            Path = "E://ohh//pyohh//work//oo//articles",
-            IsDirectory = true,
-        };
+        DocumentTreeNode rootNode = RootNode;
         BuildDocumentNode(rootNode);
         DocumentTree = new ObservableCollection<DocumentTreeNode>() { rootNode };
     }

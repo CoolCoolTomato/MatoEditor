@@ -14,12 +14,7 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="_File">
-                <MenuItem Header="_Open"></MenuItem>
-                <MenuItem Header="_Import"></MenuItem>
-            </MenuItem>
-        </Menu>
+        <views:Navigation DataContext="{Binding NavigationViewModel}" DockPanel.Dock="Top"/>
         <SplitView IsPaneOpen="True" DisplayMode="Inline" OpenPaneLength="300">
             <SplitView.Pane>
                 <views:DocumentTree DataContext="{Binding DocumentTreeViewModel}"/>
