@@ -1,18 +1,29 @@
 ﻿using System;
 using Markdig;
+using MatoEditor.Services;
 using ReactiveUI;
 
 namespace MatoEditor.ViewModels;
 
 public class EditorViewModel : ViewModelBase
 {
-    public EditorViewModel()
+    public EditorViewModel(IFileSystemService fileSystemService, StorageService storageService)
     {
+        _fileSystemService = fileSystemService;
+        _storageService = storageService;
         ContentString = "";
         ContentHtml = "";
+        _storageService.WhenAnyValue(x => x.CurrentFilePath)
+            .Subscribe(CurrentFilePath =>
+            {
+                UpdateContentString(CurrentFilePath);
+            });
         this.WhenAnyValue(x => x.ContentString).Subscribe(_ => ConvertMarkdown());
     }
-
+    
+    private readonly IFileSystemService _fileSystemService;
+    private StorageService _storageService;
+    
     private string _contentString;
     private string _contentHtml;
 
@@ -31,5 +42,10 @@ public class EditorViewModel : ViewModelBase
     private void ConvertMarkdown()
     {
         ContentHtml = ContentString == "" ? "<br/>" : Markdown.ToHtml(ContentString);
+    }
+
+    private async void UpdateContentString(string filePath)
+    {
+        ContentString = await _fileSystemService.ReadFileAsync(filePath);
     }
 }

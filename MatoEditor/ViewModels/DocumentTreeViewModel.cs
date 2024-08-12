@@ -24,6 +24,9 @@ public class DocumentTreeViewModel : ViewModelBase
                 _rootNode.IsDirectory = true;
                 BuildDocumentTree();
             });
+        SelectedNode = new DocumentTreeNode();
+        this.WhenAnyValue(x => x.SelectedNode)
+            .Subscribe(_ => SelectFile());
     }
     
     private readonly IFileSystemService _fileSystemService;
@@ -68,6 +71,20 @@ public class DocumentTreeViewModel : ViewModelBase
                 IsDirectory = false,
             };
             node.SubNodes.Add(file);
+        }
+    }
+
+    private DocumentTreeNode _selectedNode;
+    public DocumentTreeNode SelectedNode
+    {
+        get => _selectedNode;
+        set => this.RaiseAndSetIfChanged(ref _selectedNode, value);
+    }
+    private void SelectFile()
+    {
+        if (!SelectedNode.IsDirectory)
+        {
+            _storageService.CurrentFilePath = SelectedNode.Path;
         }
     }
 }

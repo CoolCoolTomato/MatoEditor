@@ -10,4 +10,11 @@ public class StorageService : ReactiveObject
         get => _rootDirectoryPath;
         set => this.RaiseAndSetIfChanged(ref _rootDirectoryPath, value);
     }
+
+    private string _currentFilePath;
+    public string CurrentFilePath
+    {
+        get => _currentFilePath;
+        set => this.RaiseAndSetIfChanged(ref _currentFilePath, value);
+    }
 }

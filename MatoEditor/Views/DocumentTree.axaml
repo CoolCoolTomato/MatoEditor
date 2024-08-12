@@ -9,7 +9,8 @@
     <Panel>
         <TreeView 
             ItemsSource="{Binding DocumentTree}" 
-            Background="White">
+            Background="White"
+            SelectedItem="{Binding SelectedNode}">
             <TreeView.ItemTemplate>
                 <TreeDataTemplate ItemsSource="{Binding SubNodes}">
                     <TextBlock Text="{Binding Name}"/>
