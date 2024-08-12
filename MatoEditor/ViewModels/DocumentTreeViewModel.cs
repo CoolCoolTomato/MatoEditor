@@ -14,32 +14,35 @@ public class DocumentTreeViewModel : ViewModelBase
     {
         _fileSystemService = fileSystemService;
         _storageService = storageService;
-        RootNode = new DocumentTreeNode
-        {
-            Name = "Artices"
-        };
-        _storageService.WhenAnyValue(x => x.RootDirectoryPath).Subscribe(RootDirectoryPath => RootNode.Path = RootDirectoryPath);
-        BuildDocumentTree();
-    }
-    private readonly IFileSystemService _fileSystemService;
-    private StorageService _storageService;
-
-    private DocumentTreeNode _rootNode;
-    public DocumentTreeNode RootNode
-    {
-        get => _rootNode;
-        set => this.RaiseAndSetIfChanged(ref _rootNode, value);
+        _rootNode = new DocumentTreeNode();
+        _storageService.WhenAnyValue(x => x.RootDirectoryPath)
+            .Subscribe(RootDirectoryPath =>
+            {
+                _rootNode.Name = Path.GetFileName(RootDirectoryPath);
+                _rootNode.Path = RootDirectoryPath;
+                _rootNode.SubNodes.Clear();
+                _rootNode.IsDirectory = true;
+                BuildDocumentTree();
+            });
     }
     
-    public ObservableCollection<DocumentTreeNode> DocumentTree { get; set; }
-
-    private async void BuildDocumentTree()
+    private readonly IFileSystemService _fileSystemService;
+    private StorageService _storageService;
+    
+    private DocumentTreeNode _rootNode { get; set; }
+    
+    private ObservableCollection<DocumentTreeNode> _documentTree;
+    public ObservableCollection<DocumentTreeNode> DocumentTree
     {
-        DocumentTreeNode rootNode = RootNode;
-        BuildDocumentNode(rootNode);
-        DocumentTree = new ObservableCollection<DocumentTreeNode>() { rootNode };
+        get => _documentTree;
+        set => this.RaiseAndSetIfChanged(ref _documentTree, value);
     }
-
+    
+    private void BuildDocumentTree()
+    {
+        BuildDocumentNode(_rootNode);
+        DocumentTree = new ObservableCollection<DocumentTreeNode>() { _rootNode };
+    }
     private async void BuildDocumentNode(DocumentTreeNode node)
     {
         IEnumerable<DirectoryInfo> subDirectoryInfos = await _fileSystemService.GetSubDirectories(node.Path);

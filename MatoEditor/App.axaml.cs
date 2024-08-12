@@ -1,5 +1,6 @@
 using System;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
@@ -35,10 +36,16 @@ public partial class App : Application
             ConfigureServices(services);
             ServiceProvider = services.BuildServiceProvider();
 
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = ServiceProvider.GetRequiredService<MainWindowViewModel>(),
-            };
+            var mainWindow = new MainWindow();
+            var viewModel = ActivatorUtilities.CreateInstance<MainWindowViewModel>(
+                ServiceProvider, 
+                ServiceProvider.GetRequiredService<IFileSystemService>(),
+                ServiceProvider.GetRequiredService<StorageService>(),
+                mainWindow
+            );
+
+            mainWindow.DataContext = viewModel;
+            desktop.MainWindow = mainWindow;
         }
 
         base.OnFrameworkInitializationCompleted();
