@@ -18,7 +18,11 @@ public class EditorViewModel : ViewModelBase
             {
                 UpdateContentString(CurrentFilePath);
             });
-        this.WhenAnyValue(x => x.ContentString).Subscribe(_ => ConvertMarkdown());
+        this.WhenAnyValue(x => x.ContentString).Subscribe(_ =>
+        {
+            ConvertMarkdown();
+            SaveFile();
+        });
     }
     
     private readonly IFileSystemService _fileSystemService;
@@ -47,5 +51,10 @@ public class EditorViewModel : ViewModelBase
     private async void UpdateContentString(string filePath)
     {
         ContentString = await _fileSystemService.ReadFileAsync(filePath);
+    }
+
+    private async void SaveFile()
+    {
+        _ = await _fileSystemService.WriteFileAsync(_storageService.CurrentFilePath, ContentString);
     }
 }

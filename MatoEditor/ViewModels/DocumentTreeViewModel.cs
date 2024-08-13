@@ -25,7 +25,7 @@ public class DocumentTreeViewModel : ViewModelBase
                 BuildDocumentTree();
             });
         SelectedNode = new DocumentTreeNode();
-        this.WhenAnyValue(x => x.SelectedNode)
+        this.WhenAnyValue(x => x.SelectedNode.Path)
             .Subscribe(_ => SelectFile());
     }
     
@@ -44,6 +44,7 @@ public class DocumentTreeViewModel : ViewModelBase
     private void BuildDocumentTree()
     {
         BuildDocumentNode(_rootNode);
+        
         DocumentTree = new ObservableCollection<DocumentTreeNode>() { _rootNode };
     }
     private async void BuildDocumentNode(DocumentTreeNode node)
@@ -80,6 +81,7 @@ public class DocumentTreeViewModel : ViewModelBase
         get => _selectedNode;
         set => this.RaiseAndSetIfChanged(ref _selectedNode, value);
     }
+
     private void SelectFile()
     {
         if (!SelectedNode.IsDirectory)
