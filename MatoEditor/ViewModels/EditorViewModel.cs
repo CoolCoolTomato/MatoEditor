@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Windows.Input;
+using Avalonia.Controls;
+using AvaloniaEdit;
 using Markdig;
 using MatoEditor.Services;
 using ReactiveUI;
@@ -7,10 +10,15 @@ namespace MatoEditor.ViewModels;
 
 public class EditorViewModel : ViewModelBase
 {
-    public EditorViewModel(IFileSystemService fileSystemService, StorageService storageService)
+    public EditorViewModel(Window window, IFileSystemService fileSystemService, StorageService storageService)
     {
+        _window = window;
         _fileSystemService = fileSystemService;
         _storageService = storageService;
+
+        _textEditor = _window.FindControl<UserControl>("EditorUserControl").FindControl<TextEditor>("TextEditor");
+        InsertSymbolCommand = ReactiveCommand.Create<string>(InsertSymbol);
+        
         ContentString = "";
         ContentHtml = "";
         _storageService.WhenAnyValue(x => x.CurrentFilePath)
@@ -24,9 +32,19 @@ public class EditorViewModel : ViewModelBase
             SaveFile();
         });
     }
-    
+
+    private readonly Window _window;
     private readonly IFileSystemService _fileSystemService;
     private StorageService _storageService;
+
+    private TextEditor _textEditor { get; set; }
+    public ICommand InsertSymbolCommand { get; }
+    private void InsertSymbol(string symbol)
+    {
+        var caretOffset = _textEditor.CaretOffset;
+        _textEditor.Document.Insert(caretOffset, symbol);
+        _textEditor.CaretOffset = caretOffset + symbol.Length;
+    }
     
     private string _contentString;
     private string _contentHtml;
@@ -42,7 +60,6 @@ public class EditorViewModel : ViewModelBase
         get => _contentHtml;
         set => this.RaiseAndSetIfChanged(ref _contentHtml, value);
     }
-
     private void ConvertMarkdown()
     {
         ContentHtml = ContentString == "" ? "<br/>" : Markdown.ToHtml(ContentString);

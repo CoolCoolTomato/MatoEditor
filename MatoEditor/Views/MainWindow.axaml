@@ -20,7 +20,7 @@
                 <views:DocumentTree DataContext="{Binding DocumentTreeViewModel}"/>
             </SplitView.Pane>
             <Grid>
-                <views:Editor DataContext="{Binding EditorViewModel}"/>
+                <views:Editor Name="EditorUserControl" DataContext="{Binding EditorViewModel}"/>
             </Grid>
         </SplitView>
     </DockPanel>
