@@ -8,9 +8,29 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MatoEditor.Views.Editor"
              x:DataType="viewModels:EditorViewModel">
-    <Grid ColumnDefinitions="*, 4, *">
-        <StackPanel>
-            <StackPanel Orientation="Horizontal">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <Button Content="edit" Command="{Binding SetEditorModeCommand}" CommandParameter="edit" Background="White"/>    
+            <Button Content="view" Command="{Binding SetEditorModeCommand}" CommandParameter="view" Background="White"/>
+            <Button Content="all" Command="{Binding SetEditorModeCommand}" CommandParameter="all" Background="White"/>    
+        </StackPanel>
+        
+        <Grid Grid.Row="1" Grid.Column="0" IsVisible="{Binding EditorVisible}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            
+            <StackPanel Orientation="Horizontal" Grid.Row="0">
                 <Button Content="H1" Command="{Binding InsertSymbolCommand}" CommandParameter="# " Background="White"/>
                 <Button Content="H2" Command="{Binding InsertSymbolCommand}" CommandParameter="## " Background="White"/>
                 <Button Content="H3" Command="{Binding InsertSymbolCommand}" CommandParameter="### " Background="White"/>
@@ -21,24 +41,25 @@
                 <Button Content="I" Command="{Binding InsertSymbolCommand}" CommandParameter="* *" Background="White"/>
                 <Button Content="B" Command="{Binding InsertSymbolCommand}" CommandParameter="** **" Background="White"/>
             </StackPanel>
-            <avaloniaEdit:TextEditor
-                Name="TextEditor"
-                Margin="0"
-                Background="White"
-                Foreground="Black"
-                SyntaxHighlighting="C#"
-                HorizontalScrollBarVisibility="Auto"
-                VerticalScrollBarVisibility="Auto"
-                FontFamily="{DynamicResource CodeFontFamily}" 
-                FontWeight="Normal" 
-                FontSize="14"
-                WordWrap="True">
-                <Interaction.Behaviors>
-                    <utils:AvalonEditBehavior Text="{Binding ContentString, Mode=TwoWay}"/>
-                </Interaction.Behaviors>
-            </avaloniaEdit:TextEditor>
-        </StackPanel>
-        <GridSplitter Grid.Column="1" Background="#303030" ResizeDirection="Columns"/>
-        <WebView HtmlContent="{Binding ContentHtml}" Grid.Column="2"/>
+            <ScrollViewer Grid.Row="1">
+                <avaloniaEdit:TextEditor
+                    Name="TextEditor"
+                    Margin="0"
+                    Background="White"
+                    Foreground="Black"
+                    SyntaxHighlighting="C#"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto"
+                    FontFamily="{DynamicResource CodeFontFamily}" 
+                    FontWeight="Normal" 
+                    FontSize="14"
+                    WordWrap="True">
+                    <Interaction.Behaviors>
+                        <utils:AvalonEditBehavior Text="{Binding ContentString, Mode=TwoWay}"/>
+                    </Interaction.Behaviors>
+                </avaloniaEdit:TextEditor>
+            </ScrollViewer>
+        </Grid>
+        <WebView Grid.Row="1" Grid.Column="1" IsVisible="{Binding ViewerVisible}" HtmlContent="{Binding ContentHtml}"/>
     </Grid>
 </UserControl>
