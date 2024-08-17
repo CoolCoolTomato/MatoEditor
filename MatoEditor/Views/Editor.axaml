@@ -24,7 +24,7 @@
             <Button Content="all" Command="{Binding SetEditorModeCommand}" CommandParameter="all" Background="White"/>    
         </StackPanel>
         
-        <Grid Grid.Row="1" Grid.Column="0" IsVisible="{Binding EditorVisible}">
+        <Grid Grid.Row="1" Grid.Column="{Binding EditorGridField.Column}" Grid.ColumnSpan="{Binding EditorGridField.ColumnSpan}" IsVisible="{Binding EditorVisible}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
@@ -60,6 +60,6 @@
                 </avaloniaEdit:TextEditor>
             </ScrollViewer>
         </Grid>
-        <WebView Grid.Row="1" Grid.Column="1" IsVisible="{Binding ViewerVisible}" HtmlContent="{Binding ContentHtml}"/>
+        <WebView Grid.Row="1" Grid.Column="{Binding ViewerGridField.Column}" Grid.ColumnSpan="{Binding ViewerGridField.ColumnSpan}" IsVisible="{Binding ViewerVisible}" HtmlContent="{Binding ContentHtml}"/>
     </Grid>
 </UserControl>

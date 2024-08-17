@@ -24,6 +24,16 @@ public class EditorViewModel : ViewModelBase
 
         EditorVisible = true;
         ViewerVisible = true;
+        EditorGridField = new GridField
+        {
+            Column = 0,
+            ColumnSpan = 1
+        };
+        ViewerGridField = new GridField
+        {
+            Column = 1,
+            ColumnSpan = 1
+        };
         SetEditorModeCommand = ReactiveCommand.Create<string>(SetEditorMode);
         
         _storageService.WhenAnyValue(x => x.CurrentFilePath)
@@ -92,7 +102,54 @@ public class EditorViewModel : ViewModelBase
         get => _viewerVisible;
         set => this.RaiseAndSetIfChanged(ref _viewerVisible, value);
     }
-    
+    public class GridField : ReactiveObject
+    {
+        public GridField()
+        {
+            Row = 0;
+            Column = 0;
+            RowSpan = 0;
+            ColumnSpan = 0;
+        }
+
+        private int _row;
+        public int Row
+        {
+            get => _row;
+            set => this.RaiseAndSetIfChanged(ref _row, value);
+        }
+        private int _column;
+        public int Column
+        {
+            get => _column;
+            set => this.RaiseAndSetIfChanged(ref _column, value);
+        }
+        private int _rowSpan;
+        public int RowSpan
+        {
+            get => _rowSpan;
+            set => this.RaiseAndSetIfChanged(ref _rowSpan, value);
+        }
+        private int _columnSpan;
+        public int ColumnSpan
+        {
+            get => _columnSpan;
+            set => this.RaiseAndSetIfChanged(ref _columnSpan, value);
+        }
+    }
+
+    private GridField _editorGridField;
+    public GridField EditorGridField
+    {
+        get => _editorGridField;
+        set => this.RaiseAndSetIfChanged(ref _editorGridField, value);
+    }
+    private GridField _viewerGridField;
+    public GridField ViewerGridField
+    {
+        get => _viewerGridField;
+        set => this.RaiseAndSetIfChanged(ref _viewerGridField, value);
+    }
     public ICommand SetEditorModeCommand { get; }
     private void SetEditorMode(string mode)
     {
@@ -100,16 +157,28 @@ public class EditorViewModel : ViewModelBase
         {
             EditorVisible = true;
             ViewerVisible = false;
+            EditorGridField.Column = 0;
+            EditorGridField.ColumnSpan = 2;
+            ViewerGridField.Column = 1;
+            ViewerGridField.ColumnSpan = 0;
         }
         else if (mode == "view")
         {
             EditorVisible = false;
             ViewerVisible = true;
+            EditorGridField.Column = 1;
+            EditorGridField.ColumnSpan = 0;
+            ViewerGridField.Column = 0;
+            ViewerGridField.ColumnSpan = 2;
         }
         else
         {
             EditorVisible = true;
             ViewerVisible = true;
+            EditorGridField.Column = 0;
+            EditorGridField.ColumnSpan = 1;
+            ViewerGridField.Column = 1;
+            ViewerGridField.ColumnSpan = 1;
         }
     }
 }
