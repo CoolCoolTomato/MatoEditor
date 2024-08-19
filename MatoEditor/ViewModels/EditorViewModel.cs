@@ -87,7 +87,10 @@ public class EditorViewModel : ViewModelBase
 
     private async void SaveFile()
     {
-        _ = await _fileSystemService.WriteFileAsync(_storageService.CurrentFilePath, ContentString);
+        if (_storageService.CurrentFilePath != "")
+        {
+            _ = await _fileSystemService.WriteFileAsync(_storageService.CurrentFilePath, ContentString);
+        }
     }
 
     private bool _editorVisible;

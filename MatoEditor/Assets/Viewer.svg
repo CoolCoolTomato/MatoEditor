@@ -1,0 +1,13 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="100" height="100" viewBox="0 0 100 100" fill="none">
+    <rect x="0" y="0" width="0" height="0" fill="rgba(249, 249, 249, 1)" />
+    <path fill-opacity="0" d="M0 100L100 100L100 0L0 0L0 100Z">
+    </path>
+    <rect x="5" y="5" width="90" height="20">
+    </rect>
+    <rect x="5" y="5" width="20" height="90">
+    </rect>
+    <rect x="75" y="5" width="20" height="90">
+    </rect>
+    <rect x="5" y="75" width="90" height="20">
+    </rect>
+</svg>
