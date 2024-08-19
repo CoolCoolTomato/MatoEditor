@@ -54,7 +54,14 @@ public sealed class AvalonEditBehavior : Behavior<TextEditor>
         {
             var caretOffset = _textEditor.CaretOffset;
             _textEditor.Document.Text = text;
-            _textEditor.CaretOffset = caretOffset;
+            if (caretOffset > _textEditor.Document.TextLength)
+            {
+                _textEditor.CaretOffset = _textEditor.Document.TextLength;
+            }
+            else
+            {
+                _textEditor.CaretOffset = caretOffset;
+            }
         }
     }
 }
