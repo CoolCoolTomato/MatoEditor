@@ -15,13 +15,16 @@
     </Design.DataContext>
     <DockPanel>
         <views:Navigation DataContext="{Binding NavigationViewModel}" DockPanel.Dock="Top"/>
-        <SplitView IsPaneOpen="True" DisplayMode="Inline" OpenPaneLength="300">
-            <SplitView.Pane>
-                <views:DocumentTree DataContext="{Binding DocumentTreeViewModel}"/>
-            </SplitView.Pane>
-            <Grid>
-                <views:Editor Name="EditorUserControl" DataContext="{Binding EditorViewModel}"/>
-            </Grid>
-        </SplitView>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="100" MaxWidth="500" Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <views:DocumentTree Grid.Column="0" DataContext="{Binding DocumentTreeViewModel}"/>
+            <GridSplitter Grid.Column="1"/>
+            <views:Editor Grid.Column="2" Name="EditorUserControl" DataContext="{Binding EditorViewModel}"/>
+        </Grid>
     </DockPanel>
 </Window>
