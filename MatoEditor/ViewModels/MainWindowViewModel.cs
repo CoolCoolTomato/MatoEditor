@@ -11,10 +11,10 @@ public partial class MainWindowViewModel : ViewModelBase
     public DocumentTreeViewModel DocumentTreeViewModel { get; }
     public EditorViewModel EditorViewModel { get; }
 
-    public MainWindowViewModel(Window window, IFileSystemService fileSystemService, StorageService storageService)
+    public MainWindowViewModel(Window window, IFileSystemService fileSystemService, StorageService storageService, ConfigurationService configurationService)
     {
         _window = window;
-        NavigationViewModel = new NavigationViewModel(window, storageService);
+        NavigationViewModel = new NavigationViewModel(window, storageService, configurationService);
         DocumentTreeViewModel = new DocumentTreeViewModel(fileSystemService, storageService);
         EditorViewModel = new EditorViewModel(window, fileSystemService, storageService);
     }

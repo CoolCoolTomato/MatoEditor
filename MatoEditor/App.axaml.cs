@@ -36,6 +36,9 @@ public partial class App : Application
             ConfigureServices(services);
             ServiceProvider = services.BuildServiceProvider();
 
+            var configService = ServiceProvider.GetRequiredService<ConfigurationService>();
+            configService.LoadConfiguration();
+            
             var mainWindow = new MainWindow();
             var viewModel = ActivatorUtilities.CreateInstance<MainWindowViewModel>(
                 ServiceProvider, 
@@ -55,6 +58,7 @@ public partial class App : Application
     {
         services.AddSingleton<IFileSystemService, FileSystemService>();
         services.AddSingleton<StorageService>();
+        services.AddSingleton<ConfigurationService>();
         services.AddTransient<MainWindowViewModel>();
     }
 }
