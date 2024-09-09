@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using Avalonia.Controls;
+using FluentAvalonia.UI.Controls;
 using MatoEditor.Models;
 using MatoEditor.Services;
 using ReactiveUI;
@@ -25,6 +29,9 @@ public class DocumentTreeViewModel : ViewModelBase
                 BuildDocumentTree();
             });
         SelectedNode = new DocumentTreeNode();
+        
+        OpenCreateDirectoryDialogCommand = ReactiveCommand.Create<string>(OpenCreateDirectoryDialog);
+        
         this.WhenAnyValue(x => x.SelectedNode.Path)
             .Subscribe(_ => SelectFile());
     }
@@ -87,6 +94,30 @@ public class DocumentTreeViewModel : ViewModelBase
         if (!SelectedNode.IsDirectory)
         {
             _storageService.CurrentFilePath = SelectedNode.Path;
+        }
+    }
+    
+    public ICommand OpenCreateDirectoryDialogCommand { get; }
+    private async void OpenCreateDirectoryDialog(string path)
+    {
+        var dialog = new ContentDialog()
+        {
+            Title = "Create Directory",
+            Content = new TextBox()
+            {
+                Watermark = "Input directory name"
+            },
+            PrimaryButtonText = "Create",
+            CloseButtonText = "Close",
+        };
+        
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            var directoryName = ((TextBox)dialog.Content).Text;
+            await _fileSystemService.CreateDirectoryAsync(path + "/" + directoryName);
+            _rootNode.SubNodes.Clear();
+            BuildDocumentTree();
         }
     }
 }

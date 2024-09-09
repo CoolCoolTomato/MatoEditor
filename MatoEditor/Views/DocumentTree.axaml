@@ -13,7 +13,13 @@
             SelectedItem="{Binding SelectedNode}">
             <TreeView.ItemTemplate>
                 <TreeDataTemplate ItemsSource="{Binding SubNodes}">
-                    <TextBlock Text="{Binding Name}"/>
+                    <TextBlock Text="{Binding Name}">
+                        <TextBlock.ContextMenu>
+                            <ContextMenu IsVisible="{Binding IsDirectory}">
+                                <MenuItem Header="_New Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenCreateDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
                 </TreeDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>

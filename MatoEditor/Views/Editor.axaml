@@ -5,6 +5,7 @@
              xmlns:viewModels="clr-namespace:MatoEditor.ViewModels"
              xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
              xmlns:utils="clr-namespace:MatoEditor.utils"
+             xmlns:htmlRenderer="clr-namespace:TheArtOfDev.HtmlRenderer.Avalonia;assembly=Avalonia.HtmlRenderer"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MatoEditor.Views.Editor"
              x:DataType="viewModels:EditorViewModel">
@@ -113,11 +114,12 @@
                 </avaloniaEdit:TextEditor>
             </ScrollViewer>
         </Grid>
-        <WebView 
-            Grid.Row="1" 
-            Grid.Column="{Binding ViewerGridField.Column}" 
-            Grid.ColumnSpan="{Binding ViewerGridField.ColumnSpan}" 
-            IsVisible="{Binding ViewerVisible}" 
-            HtmlContent="{Binding ContentHtml}"/>
+        <Panel Grid.Row="1" 
+               Grid.Column="{Binding ViewerGridField.Column}" 
+               Grid.ColumnSpan="{Binding ViewerGridField.ColumnSpan}" 
+               IsVisible="{Binding ViewerVisible}"
+               ZIndex="0">
+            <htmlRenderer:HtmlPanel Text="{Binding ContentHtml}"/>
+        </Panel>
     </Grid>
 </UserControl>
