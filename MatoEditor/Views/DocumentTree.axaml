@@ -18,6 +18,8 @@
                             <ContextMenu IsVisible="{Binding IsDirectory}">
                                 <MenuItem Header="_New Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenCreateDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
                                 <MenuItem Header="_Rename Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenRenameDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
+                                <MenuItem Header="_Delete Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenDeleteDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
+
                             </ContextMenu>
                         </TextBlock.ContextMenu>
                     </TextBlock>
