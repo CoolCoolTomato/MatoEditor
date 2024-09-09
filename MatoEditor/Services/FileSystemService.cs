@@ -113,7 +113,6 @@ public class FileSystemService : IFileSystemService
             return false;
         }
     }
-
     public async Task<bool> RenameFileAsync(string oldPath, string newPath)
     {
         try
@@ -131,7 +130,6 @@ public class FileSystemService : IFileSystemService
             return false;
         }
     }
-
     public async Task<bool> DeleteFileAsync(string path)
     {
         try
