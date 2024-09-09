@@ -61,6 +61,30 @@ public class FileSystemService : IFileSystemService
             return false;
         }
     }
+    public async Task<bool> RenameDirectoryAsync(string oldPath, string newPath)
+    {
+        try
+        {
+            await Task.Run(() => Directory.Move(oldPath, newPath));
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+    public async Task<bool> DeleteDirectoryAsync(string path)
+    {
+        try
+        {
+            await Task.Run(() => Directory.Delete(path));
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
     public async Task<bool> FileExistsAsync(string path)
     {
         try
@@ -82,6 +106,41 @@ public class FileSystemService : IFileSystemService
             }
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             await using (File.Create(path)){}
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> RenameFileAsync(string oldPath, string newPath)
+    {
+        try
+        {
+            if (!(await FileExistsAsync(oldPath)) || await FileExistsAsync(newPath))
+            {
+                return false;
+            }
+            Directory.CreateDirectory(Path.GetDirectoryName(newPath));
+            File.Move(oldPath, newPath);
+            return true;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public async Task<bool> DeleteFileAsync(string path)
+    {
+        try
+        {
+            if (!(await FileExistsAsync(path)))
+            {
+                return false;
+            }
+            File.Delete(path);
             return true;
         }
         catch (Exception)
