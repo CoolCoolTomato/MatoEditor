@@ -33,6 +33,7 @@ public class DocumentTreeViewModel : ViewModelBase
         OpenCreateDirectoryDialogCommand = ReactiveCommand.Create<string>(OpenCreateDirectoryDialog);
         OpenRenameDirectoryDialogCommand = ReactiveCommand.Create<string>(OpenRenameDirectoryDialog);
         OpenDeleteDirectoryDialogCommand = ReactiveCommand.Create<string>(OpenDeleteDirectoryDialog);
+        OpenCreateFileDialogCommand = ReactiveCommand.Create<string>(OpenCreateFileDialog);
         this.WhenAnyValue(x => x.SelectedNode.Path)
             .Subscribe(_ => SelectFile());
     }
@@ -160,6 +161,30 @@ public class DocumentTreeViewModel : ViewModelBase
         if (result == ContentDialogResult.Primary)
         {
             await _fileSystemService.DeleteDirectoryAsync(path);
+            _rootNode.SubNodes.Clear();
+            BuildDocumentTree();
+        }
+    }
+    
+    public ICommand OpenCreateFileDialogCommand { get; }
+    private async void OpenCreateFileDialog(string path)
+    {
+        var dialog = new ContentDialog()
+        {
+            Title = "Create File",
+            Content = new TextBox()
+            {
+                Watermark = "Input file name"
+            },
+            PrimaryButtonText = "Create",
+            CloseButtonText = "Close",
+        };
+        
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            var fileName = ((TextBox)dialog.Content).Text;
+            await _fileSystemService.CreateFileAsync(path + "/" + fileName);
             _rootNode.SubNodes.Clear();
             BuildDocumentTree();
         }

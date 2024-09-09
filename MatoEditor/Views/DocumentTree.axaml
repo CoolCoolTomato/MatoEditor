@@ -19,7 +19,7 @@
                                 <MenuItem Header="_New Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenCreateDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
                                 <MenuItem Header="_Rename Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenRenameDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
                                 <MenuItem Header="_Delete Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenDeleteDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
-
+                                <MenuItem Header="_New File" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenCreateFileDialogCommand}" CommandParameter="{Binding Path}"/>
                             </ContextMenu>
                         </TextBlock.ContextMenu>
                     </TextBlock>
