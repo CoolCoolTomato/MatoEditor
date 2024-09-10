@@ -34,6 +34,8 @@ public class DocumentTreeViewModel : ViewModelBase
         OpenRenameDirectoryDialogCommand = ReactiveCommand.Create<string>(OpenRenameDirectoryDialog);
         OpenDeleteDirectoryDialogCommand = ReactiveCommand.Create<string>(OpenDeleteDirectoryDialog);
         OpenCreateFileDialogCommand = ReactiveCommand.Create<string>(OpenCreateFileDialog);
+        OpenRenameFileDialogCommand = ReactiveCommand.Create<string>(OpenRenameFileDialog);
+        OpenDeleteFileDialogCommand = ReactiveCommand.Create<string>(OpenDeleteFileDialog);
         this.WhenAnyValue(x => x.SelectedNode.Path)
             .Subscribe(_ => SelectFile());
     }
@@ -185,6 +187,49 @@ public class DocumentTreeViewModel : ViewModelBase
         {
             var fileName = ((TextBox)dialog.Content).Text;
             await _fileSystemService.CreateFileAsync(path + "/" + fileName);
+            _rootNode.SubNodes.Clear();
+            BuildDocumentTree();
+        }
+    }
+    
+    public ICommand OpenRenameFileDialogCommand { get; }
+    private async void OpenRenameFileDialog(string path)
+    {
+        var dialog = new ContentDialog()
+        {
+            Title = "Rename File",
+            Content = new TextBox()
+            {
+                Watermark = "Input new file name"
+            },
+            PrimaryButtonText = "Rename",
+            CloseButtonText = "Close",
+        };
+        
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            var newDirectoryName = ((TextBox)dialog.Content).Text;
+            await _fileSystemService.RenameFileAsync(path, Path.GetDirectoryName(path) + "/" + newDirectoryName);
+            _rootNode.SubNodes.Clear();
+            BuildDocumentTree();
+        }
+    }
+    
+    public ICommand OpenDeleteFileDialogCommand { get; }
+    private async void OpenDeleteFileDialog(string path)
+    {
+        var dialog = new ContentDialog()
+        {
+            Title = "Delete File",
+            PrimaryButtonText = "Delete",
+            CloseButtonText = "Close",
+        };
+        
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            await _fileSystemService.DeleteFileAsync(path);
             _rootNode.SubNodes.Clear();
             BuildDocumentTree();
         }

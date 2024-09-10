@@ -15,11 +15,13 @@
                 <TreeDataTemplate ItemsSource="{Binding SubNodes}">
                     <TextBlock Text="{Binding Name}">
                         <TextBlock.ContextMenu>
-                            <ContextMenu IsVisible="{Binding IsDirectory}">
-                                <MenuItem Header="_New Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenCreateDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
-                                <MenuItem Header="_Rename Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenRenameDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
-                                <MenuItem Header="_Delete Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenDeleteDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
-                                <MenuItem Header="_New File" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenCreateFileDialogCommand}" CommandParameter="{Binding Path}"/>
+                            <ContextMenu>
+                                <MenuItem IsVisible="{Binding IsDirectory}" Header="_New Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenCreateDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
+                                <MenuItem IsVisible="{Binding IsDirectory}" Header="_Rename Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenRenameDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
+                                <MenuItem IsVisible="{Binding IsDirectory}" Header="_Delete Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenDeleteDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
+                                <MenuItem IsVisible="{Binding IsDirectory}" Header="_New File" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenCreateFileDialogCommand}" CommandParameter="{Binding Path}"/>
+                                <MenuItem IsVisible="{Binding !IsDirectory}" Header="_Rename File" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenRenameFileDialogCommand}" CommandParameter="{Binding Path}"/>
+                                <MenuItem IsVisible="{Binding !IsDirectory}" Header="_Delete File" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenDeleteFileDialogCommand}" CommandParameter="{Binding Path}"/>
                             </ContextMenu>
                         </TextBlock.ContextMenu>
                     </TextBlock>
