@@ -8,7 +8,7 @@
              x:DataType="viewModels:NavigationViewModel">
     <Menu>
         <MenuItem Header="_File">
-            <MenuItem Header="_Open" Command="{Binding SelectDirectoryCommand}"></MenuItem>
+            <MenuItem Header="_Open" Command="{Binding SelectDirectoryCommand}"/>
         </MenuItem>
     </Menu>
 </UserControl>

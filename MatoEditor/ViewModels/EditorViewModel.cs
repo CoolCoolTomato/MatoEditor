@@ -18,7 +18,8 @@ public class EditorViewModel : ViewModelBase
 
         _textEditor = _window.FindControl<UserControl>("EditorUserControl").FindControl<TextEditor>("TextEditor");
         InsertSymbolCommand = ReactiveCommand.Create<string>(InsertSymbol);
-        
+
+        FilePath = "";
         ContentString = "";
         ContentHtml = "";
 
@@ -40,6 +41,7 @@ public class EditorViewModel : ViewModelBase
             .Subscribe(CurrentFilePath =>
             {
                 UpdateContentString(CurrentFilePath);
+                FilePath = CurrentFilePath;
             });
         this.WhenAnyValue(x => x.ContentString).Subscribe(_ =>
         {
@@ -59,6 +61,13 @@ public class EditorViewModel : ViewModelBase
         var caretOffset = _textEditor.CaretOffset;
         _textEditor.Document.Insert(caretOffset, symbol);
         _textEditor.CaretOffset = caretOffset + symbol.Length;
+    }
+
+    private string _filePath;
+    public string FilePath
+    {
+        get => _filePath;
+        set => this.RaiseAndSetIfChanged(ref _filePath, value);
     }
     
     private string _contentString;

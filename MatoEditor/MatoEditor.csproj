@@ -15,8 +15,6 @@
     <ItemGroup>
         <PackageReference Include="Avalonia" Version="11.1.0"/>
         <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.0.6" />
-        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.1.0" />
-        <PackageReference Include="Avalonia.Controls.TreeDataGrid" Version="11.0.10" />
         <PackageReference Include="Avalonia.Desktop" Version="11.1.0"/>
         <PackageReference Include="Avalonia.HtmlRenderer" Version="11.0.0" />
         <PackageReference Include="Avalonia.Native" Version="11.1.0" />
@@ -31,6 +29,8 @@
         <PackageReference Include="FluentAvaloniaUI" Version="2.1.0" />
         <PackageReference Include="Markdig" Version="0.37.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0-preview.6.24327.7" />
+        <PackageReference Include="Semi.Avalonia" Version="11.1.0" />
+        <PackageReference Include="Semi.Avalonia.ColorPicker" Version="11.1.0" />
         <PackageReference Include="WebView.Avalonia" Version="11.0.0" />
         <PackageReference Include="WebView.Avalonia.Windows" Version="11.0.0" />
     </ItemGroup>
