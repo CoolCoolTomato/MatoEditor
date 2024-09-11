@@ -13,13 +13,18 @@
         <Grid DockPanel.Dock="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            
-            <TextBlock Grid.Column="0" Text="{Binding FilePath}"/>
-            <Panel Grid.Column="1"/>
-            <StackPanel Grid.Column="2" Orientation="Horizontal" DockPanel.Dock="Top">
+            <StackPanel Grid.Column="0">
+                <Button>
+                    <Svg Path="avares://MatoEditor/Assets/Save.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+            </StackPanel>
+            <TextBlock Grid.Column="1" Text="{Binding FilePath}"/>
+            <Panel Grid.Column="2"/>
+            <StackPanel Grid.Column="3" Orientation="Horizontal" DockPanel.Dock="Top">
                 <Button Command="{Binding SetEditorModeCommand}" CommandParameter="edit">
                     <Svg Path="avares://MatoEditor/Assets/Editor.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
                 </Button>    

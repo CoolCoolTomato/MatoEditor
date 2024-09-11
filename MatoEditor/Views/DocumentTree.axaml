@@ -12,8 +12,8 @@
             SelectedItem="{Binding SelectedNode}">
             <TreeView.ItemTemplate>
                 <TreeDataTemplate ItemsSource="{Binding SubNodes}">
-                    <TextBlock Text="{Binding Name}">
-                        <TextBlock.ContextMenu>
+                    <StackPanel Orientation="Horizontal" Background="rgba(0, 0, 0, 0)">
+                        <StackPanel.ContextMenu>
                             <ContextMenu>
                                 <MenuItem IsVisible="{Binding IsDirectory}" Header="_New Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenCreateDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
                                 <MenuItem IsVisible="{Binding IsDirectory}" Header="_Rename Directory" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenRenameDirectoryDialogCommand}" CommandParameter="{Binding Path}"/>
@@ -22,8 +22,13 @@
                                 <MenuItem IsVisible="{Binding !IsDirectory}" Header="_Rename File" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenRenameFileDialogCommand}" CommandParameter="{Binding Path}"/>
                                 <MenuItem IsVisible="{Binding !IsDirectory}" Header="_Delete File" Command="{Binding $parent[UserControl].((viewModels:DocumentTreeViewModel)DataContext).OpenDeleteFileDialogCommand}" CommandParameter="{Binding Path}"/>
                             </ContextMenu>
-                        </TextBlock.ContextMenu>
-                    </TextBlock>
+                        </StackPanel.ContextMenu>
+                        <Panel Margin="0 0 5 0 ">
+                            <Svg IsVisible="{Binding IsDirectory}" Path="avares://MatoEditor/Assets/Directory.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+                            <Svg IsVisible="{Binding !IsDirectory}" Path="avares://MatoEditor/Assets/File.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+                        </Panel>
+                        <TextBlock Text="{Binding Name}"/>
+                    </StackPanel>
                 </TreeDataTemplate>
             </TreeView.ItemTemplate>
         </TreeView>
