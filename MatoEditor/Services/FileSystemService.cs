@@ -77,7 +77,7 @@ public class FileSystemService : IFileSystemService
     {
         try
         {
-            await Task.Run(() => Directory.Delete(path));
+            await Task.Run(() => Directory.Delete(path, true));
             return true;
         }
         catch (Exception)

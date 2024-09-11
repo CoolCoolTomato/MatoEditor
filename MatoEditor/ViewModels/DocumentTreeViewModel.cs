@@ -101,6 +101,76 @@ public class DocumentTreeViewModel : ViewModelBase
         }
     }
     
+    private DocumentTreeNode FindNodeByPath(DocumentTreeNode currentNode, string path)
+    {
+        if (currentNode.Path == path)
+        {
+            return currentNode;
+        }
+
+        foreach (var subNode in currentNode.SubNodes)
+        {
+            var result = FindNodeByPath(subNode, path);
+            if (result != null)
+            {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
+    private void InsertNode(DocumentTreeNode currentNode, DocumentTreeNode node)
+    {
+        int insertIndex = -1;
+        for (int i = 0; i < currentNode.SubNodes.Count; i++)
+        {
+            if (currentNode.SubNodes[i].IsDirectory == node.IsDirectory)
+            {
+                if (string.Compare(currentNode.SubNodes[i].Name, node.Name, StringComparison.OrdinalIgnoreCase) > 0)
+                {
+                    insertIndex = i;
+                    break;
+                }
+            }
+
+            if (!currentNode.SubNodes[i].IsDirectory && node.IsDirectory)
+            {
+                insertIndex = i;
+                break;
+            }
+        }
+        if (insertIndex == -1)
+        {
+            currentNode.SubNodes.Add(node);
+        }
+        else
+        {
+            currentNode.SubNodes.Insert(insertIndex, node);
+        }
+    }
+
+    private bool DeleteNodeByPath(DocumentTreeNode currentNode, string path)
+    {
+        for (int i = 0; i < currentNode.SubNodes.Count; i++)
+        {
+            var subNode = currentNode.SubNodes[i];
+            if (subNode.Path == path)
+            {
+                currentNode.SubNodes.RemoveAt(i);
+                return true;
+            }
+            
+            var result = DeleteNodeByPath(subNode, path);
+            if (result)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    
     public ICommand OpenCreateDirectoryDialogCommand { get; }
     private async void OpenCreateDirectoryDialog(string path)
     {
@@ -118,10 +188,18 @@ public class DocumentTreeViewModel : ViewModelBase
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            var directoryName = ((TextBox)dialog.Content).Text;
-            await _fileSystemService.CreateDirectoryAsync(path + "/" + directoryName);
-            _rootNode.SubNodes.Clear();
-            BuildDocumentTree();
+            var currentNode = FindNodeByPath(_rootNode, path);
+            if (currentNode != null)
+            {
+                var directory = new DocumentTreeNode()
+                {
+                    Name = ((TextBox)dialog.Content).Text,
+                    Path = path + "/" + ((TextBox)dialog.Content).Text,
+                    IsDirectory = true,
+                };
+                InsertNode(currentNode, directory);
+                await _fileSystemService.CreateDirectoryAsync(directory.Path);
+            }
         }
     }
     
@@ -142,10 +220,13 @@ public class DocumentTreeViewModel : ViewModelBase
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            var newDirectoryName = ((TextBox)dialog.Content).Text;
-            await _fileSystemService.RenameDirectoryAsync(path, Path.GetDirectoryName(path) + "/" + newDirectoryName);
-            _rootNode.SubNodes.Clear();
-            BuildDocumentTree();
+            var currentNode = FindNodeByPath(_rootNode, path);
+            if (currentNode != null)
+            {
+                currentNode.Name = ((TextBox)dialog.Content).Text;
+                currentNode.Path = Path.GetDirectoryName(path) + "/" + ((TextBox)dialog.Content).Text;
+                await _fileSystemService.RenameDirectoryAsync(path, currentNode.Path);
+            }
         }
     }
     
@@ -162,9 +243,14 @@ public class DocumentTreeViewModel : ViewModelBase
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            await _fileSystemService.DeleteDirectoryAsync(path);
-            _rootNode.SubNodes.Clear();
-            BuildDocumentTree();
+            var currentNode = FindNodeByPath(_rootNode, path);
+            if (currentNode != null)
+            {
+                if (DeleteNodeByPath(_rootNode, path))
+                {
+                    await _fileSystemService.DeleteDirectoryAsync(path);
+                }
+            }
         }
     }
     
@@ -185,10 +271,18 @@ public class DocumentTreeViewModel : ViewModelBase
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            var fileName = ((TextBox)dialog.Content).Text;
-            await _fileSystemService.CreateFileAsync(path + "/" + fileName);
-            _rootNode.SubNodes.Clear();
-            BuildDocumentTree();
+            var currentNode = FindNodeByPath(_rootNode, path);
+            if (currentNode != null)
+            {
+                var file = new DocumentTreeNode()
+                {
+                    Name = ((TextBox)dialog.Content).Text,
+                    Path = path + "/" + ((TextBox)dialog.Content).Text,
+                    IsDirectory = false,
+                };
+                InsertNode(currentNode, file);
+                await _fileSystemService.CreateFileAsync(file.Path);   
+            }
         }
     }
     
@@ -209,10 +303,13 @@ public class DocumentTreeViewModel : ViewModelBase
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            var newDirectoryName = ((TextBox)dialog.Content).Text;
-            await _fileSystemService.RenameFileAsync(path, Path.GetDirectoryName(path) + "/" + newDirectoryName);
-            _rootNode.SubNodes.Clear();
-            BuildDocumentTree();
+            var currentNode = FindNodeByPath(_rootNode, path);
+            if (currentNode != null)
+            {
+                currentNode.Name = ((TextBox)dialog.Content).Text;
+                currentNode.Path = Path.GetDirectoryName(path) + "/" + ((TextBox)dialog.Content).Text;
+                await _fileSystemService.RenameFileAsync(path, currentNode.Path);
+            }
         }
     }
     
@@ -229,9 +326,14 @@ public class DocumentTreeViewModel : ViewModelBase
         var result = await dialog.ShowAsync();
         if (result == ContentDialogResult.Primary)
         {
-            await _fileSystemService.DeleteFileAsync(path);
-            _rootNode.SubNodes.Clear();
-            BuildDocumentTree();
+            var currentNode = FindNodeByPath(_rootNode, path);
+            if (currentNode != null)
+            {
+                if (DeleteNodeByPath(_rootNode, path))
+                {
+                    await _fileSystemService.DeleteFileAsync(path);
+                }
+            }
         }
     }
 }
