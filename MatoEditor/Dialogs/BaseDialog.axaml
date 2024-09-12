@@ -2,13 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:viewModels="clr-namespace:MatoEditor.ViewModels"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:dialogs="clr-namespace:MatoEditor.Dialogs"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="MatoEditor.Views.Navigation"
-             x:DataType="viewModels:NavigationViewModel">
-    <Menu>
-        <MenuItem Header="_File">
-            <MenuItem Header="_Open" Command="{Binding SelectDirectoryCommand}"/>
-        </MenuItem>
-    </Menu>
+             x:Class="MatoEditor.Dialogs.BaseDialog"
+             x:DataType="dialogs:BaseDialogViewModel">
+    <u:Form 
+        HorizontalAlignment="Stretch" 
+        LabelPosition="Top"
+        Width="300">
+    </u:Form>
 </UserControl>

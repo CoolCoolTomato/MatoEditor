@@ -1,7 +1,6 @@
 ﻿using Avalonia;
-using System;
 using Avalonia.ReactiveUI;
-using Avalonia.WebView.Desktop;
+using System;
 
 namespace MatoEditor;
 
@@ -20,6 +19,5 @@ sealed class Program
             .UsePlatformDetect()
             .WithInterFont()
             .LogToTrace()
-            .UseReactiveUI()
-            .UseWindowWebView();
+            .UseReactiveUI();
 }

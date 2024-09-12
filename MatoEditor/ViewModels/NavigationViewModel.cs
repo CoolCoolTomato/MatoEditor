@@ -21,6 +21,7 @@ public class NavigationViewModel : ViewModelBase
     private ConfigurationService _configurationService;
 
     public ICommand SelectDirectoryCommand { get; }
+    
     private async Task SelectDirectory()
     {
         var directory = await _window.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions

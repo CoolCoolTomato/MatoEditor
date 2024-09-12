@@ -15,14 +15,14 @@ public class EditorViewModel : ViewModelBase
         _window = window;
         _fileSystemService = fileSystemService;
         _storageService = storageService;
-
+        
         _textEditor = _window.FindControl<UserControl>("EditorUserControl").FindControl<TextEditor>("TextEditor");
         InsertSymbolCommand = ReactiveCommand.Create<string>(InsertSymbol);
-
+        
         FilePath = "";
         ContentString = "";
         ContentHtml = "";
-
+        
         EditorVisible = true;
         ViewerVisible = true;
         EditorGridField = new GridField
@@ -36,33 +36,23 @@ public class EditorViewModel : ViewModelBase
             ColumnSpan = 1
         };
         SetEditorModeCommand = ReactiveCommand.Create<string>(SetEditorMode);
-        
         _storageService.WhenAnyValue(x => x.CurrentFilePath)
             .Subscribe(CurrentFilePath =>
             {
                 UpdateContentString(CurrentFilePath);
                 FilePath = CurrentFilePath;
             });
+        
         this.WhenAnyValue(x => x.ContentString).Subscribe(_ =>
         {
             ConvertMarkdown();
             SaveFile();
         });
     }
-
     private readonly Window _window;
     private readonly IFileSystemService _fileSystemService;
     private StorageService _storageService;
-
-    private TextEditor _textEditor { get; set; }
-    public ICommand InsertSymbolCommand { get; }
-    private void InsertSymbol(string symbol)
-    {
-        var caretOffset = _textEditor.CaretOffset;
-        _textEditor.Document.Insert(caretOffset, symbol);
-        _textEditor.CaretOffset = caretOffset + symbol.Length;
-    }
-
+    
     private string _filePath;
     public string FilePath
     {
@@ -71,37 +61,21 @@ public class EditorViewModel : ViewModelBase
     }
     
     private string _contentString;
-    private string _contentHtml;
-
     public string ContentString
     {
         get => _contentString;
         set => this.RaiseAndSetIfChanged(ref _contentString, value);
     }
-
+    private string _contentHtml;
     public string ContentHtml
     {
         get => _contentHtml;
         set => this.RaiseAndSetIfChanged(ref _contentHtml, value);
     }
-    private void ConvertMarkdown()
-    {
-        ContentHtml = ContentString == "" ? "<br/>" : Markdown.ToHtml(ContentString);
-    }
-
-    private async void UpdateContentString(string filePath)
-    {
-        ContentString = await _fileSystemService.ReadFileAsync(filePath);
-    }
-
-    private async void SaveFile()
-    {
-        if (_storageService.CurrentFilePath != "")
-        {
-            _ = await _fileSystemService.WriteFileAsync(_storageService.CurrentFilePath, ContentString);
-        }
-    }
-
+    
+    private TextEditor _textEditor { get; set; }
+    public ICommand InsertSymbolCommand { get; }
+    
     private bool _editorVisible;
     public bool EditorVisible
     {
@@ -114,6 +88,21 @@ public class EditorViewModel : ViewModelBase
         get => _viewerVisible;
         set => this.RaiseAndSetIfChanged(ref _viewerVisible, value);
     }
+    
+    private GridField _editorGridField;
+    public GridField EditorGridField
+    {
+        get => _editorGridField;
+        set => this.RaiseAndSetIfChanged(ref _editorGridField, value);
+    }
+    private GridField _viewerGridField;
+    public GridField ViewerGridField
+    {
+        get => _viewerGridField;
+        set => this.RaiseAndSetIfChanged(ref _viewerGridField, value);
+    }
+    
+    public ICommand SetEditorModeCommand { get; }
     public class GridField : ReactiveObject
     {
         public GridField()
@@ -149,20 +138,28 @@ public class EditorViewModel : ViewModelBase
             set => this.RaiseAndSetIfChanged(ref _columnSpan, value);
         }
     }
-
-    private GridField _editorGridField;
-    public GridField EditorGridField
+    
+    private void InsertSymbol(string symbol)
     {
-        get => _editorGridField;
-        set => this.RaiseAndSetIfChanged(ref _editorGridField, value);
+        var caretOffset = _textEditor.CaretOffset;
+        _textEditor.Document.Insert(caretOffset, symbol);
+        _textEditor.CaretOffset = caretOffset + symbol.Length;
     }
-    private GridField _viewerGridField;
-    public GridField ViewerGridField
+    private void ConvertMarkdown()
     {
-        get => _viewerGridField;
-        set => this.RaiseAndSetIfChanged(ref _viewerGridField, value);
+        ContentHtml = ContentString == "" ? "<br/>" : Markdown.ToHtml(ContentString);
     }
-    public ICommand SetEditorModeCommand { get; }
+    private async void UpdateContentString(string filePath)
+    {
+        ContentString = await _fileSystemService.ReadFileAsync(filePath);
+    }
+    private async void SaveFile()
+    {
+        if (_storageService.CurrentFilePath != "")
+        {
+            _ = await _fileSystemService.WriteFileAsync(_storageService.CurrentFilePath, ContentString);
+        }
+    }
     private void SetEditorMode(string mode)
     {
         if (mode == "edit")

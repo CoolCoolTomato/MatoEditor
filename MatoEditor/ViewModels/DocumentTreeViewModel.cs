@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Controls;
-using FluentAvalonia.UI.Controls;
+using Avalonia.Data.Converters;
+using MatoEditor.Dialogs;
 using MatoEditor.Models;
 using MatoEditor.Services;
 using ReactiveUI;
+using Ursa.Controls;
 
 namespace MatoEditor.ViewModels;
 
@@ -18,7 +20,8 @@ public class DocumentTreeViewModel : ViewModelBase
     {
         _fileSystemService = fileSystemService;
         _storageService = storageService;
-        _rootNode = new DocumentTreeNode();
+        
+        _rootNode = new Node();
         _storageService.WhenAnyValue(x => x.RootDirectoryPath)
             .Subscribe(RootDirectoryPath =>
             {
@@ -26,57 +29,70 @@ public class DocumentTreeViewModel : ViewModelBase
                 _rootNode.Path = RootDirectoryPath;
                 _rootNode.SubNodes.Clear();
                 _rootNode.IsDirectory = true;
-                BuildDocumentTree();
+                InitDocumentTree();
             });
-        SelectedNode = new DocumentTreeNode();
+        SelectedNode = new Node();
         
         OpenCreateDirectoryDialogCommand = ReactiveCommand.Create<string>(OpenCreateDirectoryDialog);
-        OpenRenameDirectoryDialogCommand = ReactiveCommand.Create<string>(OpenRenameDirectoryDialog);
+        OpenRenameDirectoryDialogCommand = ReactiveCommand.Create<Node>(OpenRenameDirectoryDialog);
         OpenDeleteDirectoryDialogCommand = ReactiveCommand.Create<string>(OpenDeleteDirectoryDialog);
         OpenCreateFileDialogCommand = ReactiveCommand.Create<string>(OpenCreateFileDialog);
-        OpenRenameFileDialogCommand = ReactiveCommand.Create<string>(OpenRenameFileDialog);
+        OpenRenameFileDialogCommand = ReactiveCommand.Create<Node>(OpenRenameFileDialog);
         OpenDeleteFileDialogCommand = ReactiveCommand.Create<string>(OpenDeleteFileDialog);
+
         this.WhenAnyValue(x => x.SelectedNode.Path)
-            .Subscribe(_ => SelectFile());
+            .Subscribe(_ => ChangeSelectedFile());
     }
-    
     private readonly IFileSystemService _fileSystemService;
     private StorageService _storageService;
     
-    private DocumentTreeNode _rootNode { get; set; }
+    private Node _rootNode { get; set; }
     
-    private ObservableCollection<DocumentTreeNode> _documentTree;
-    public ObservableCollection<DocumentTreeNode> DocumentTree
+    private ObservableCollection<Node> _documentTree;
+    public ObservableCollection<Node> DocumentTree
     {
         get => _documentTree;
         set => this.RaiseAndSetIfChanged(ref _documentTree, value);
     }
     
-    private void BuildDocumentTree()
+    private Node _selectedNode;
+    public Node SelectedNode
     {
-        BuildDocumentNode(_rootNode);
-        
-        DocumentTree = new ObservableCollection<DocumentTreeNode>() { _rootNode };
+        get => _selectedNode;
+        set => this.RaiseAndSetIfChanged(ref _selectedNode, value);
     }
-    private async void BuildDocumentNode(DocumentTreeNode node)
+    
+    public ICommand OpenCreateDirectoryDialogCommand { get; }
+    public ICommand OpenRenameDirectoryDialogCommand { get; }
+    public ICommand OpenDeleteDirectoryDialogCommand { get; }
+    public ICommand OpenCreateFileDialogCommand { get; }
+    public ICommand OpenRenameFileDialogCommand { get; }
+    public ICommand OpenDeleteFileDialogCommand { get; }
+
+    private void InitDocumentTree()
+    {
+        BuildDocumentTree(_rootNode);
+        DocumentTree = new ObservableCollection<Node>() { _rootNode };
+    }
+    private async void BuildDocumentTree(Node node)
     {
         IEnumerable<DirectoryInfo> subDirectoryInfos = await _fileSystemService.GetSubDirectories(node.Path);
         foreach (var subDirectoryInfo in subDirectoryInfos)
         {
-            var subDirectory = new DocumentTreeNode()
+            var subDirectory = new Node()
             {
                 Name = subDirectoryInfo.Name,
                 Path = subDirectoryInfo.FullName,
                 IsDirectory = true,
             };
             node.SubNodes.Add(subDirectory);
-            BuildDocumentNode(subDirectory);
+            BuildDocumentTree(subDirectory);
         }
         
         IEnumerable<FileInfo> fileInfos = await _fileSystemService.GetFiles(node.Path);
         foreach (var fileInfo in fileInfos)
         {
-            var file = new DocumentTreeNode()
+            var file = new Node()
             {
                 Name = fileInfo.Name,
                 Path = fileInfo.FullName,
@@ -86,14 +102,7 @@ public class DocumentTreeViewModel : ViewModelBase
         }
     }
 
-    private DocumentTreeNode _selectedNode;
-    public DocumentTreeNode SelectedNode
-    {
-        get => _selectedNode;
-        set => this.RaiseAndSetIfChanged(ref _selectedNode, value);
-    }
-
-    private void SelectFile()
+    private void ChangeSelectedFile()
     {
         if (!SelectedNode.IsDirectory)
         {
@@ -101,7 +110,7 @@ public class DocumentTreeViewModel : ViewModelBase
         }
     }
     
-    private DocumentTreeNode FindNodeByPath(DocumentTreeNode currentNode, string path)
+    private Node FindNodeByPath(Node currentNode, string path)
     {
         if (currentNode.Path == path)
         {
@@ -119,8 +128,7 @@ public class DocumentTreeViewModel : ViewModelBase
 
         return null;
     }
-
-    private void InsertNode(DocumentTreeNode currentNode, DocumentTreeNode node)
+    private void InsertNode(Node currentNode, Node node)
     {
         int insertIndex = -1;
         for (int i = 0; i < currentNode.SubNodes.Count; i++)
@@ -149,8 +157,7 @@ public class DocumentTreeViewModel : ViewModelBase
             currentNode.SubNodes.Insert(insertIndex, node);
         }
     }
-
-    private bool DeleteNodeByPath(DocumentTreeNode currentNode, string path)
+    private bool DeleteNodeByPath(Node currentNode, string path)
     {
         for (int i = 0; i < currentNode.SubNodes.Count; i++)
         {
@@ -171,30 +178,28 @@ public class DocumentTreeViewModel : ViewModelBase
         return false;
     }
     
-    public ICommand OpenCreateDirectoryDialogCommand { get; }
     private async void OpenCreateDirectoryDialog(string path)
     {
-        var dialog = new ContentDialog()
+        var options = new DialogOptions()
         {
-            Title = "Create Directory",
-            Content = new TextBox()
-            {
-                Watermark = "Input directory name"
-            },
-            PrimaryButtonText = "Create",
-            CloseButtonText = "Close",
+            Title = "Input directory name",
+            Mode = DialogMode.None,
+            Button = DialogButton.OKCancel,
+            ShowInTaskBar = false,
+            IsCloseButtonVisible = true,
+            StartupLocation = WindowStartupLocation.CenterOwner,
         };
-        
-        var result = await dialog.ShowAsync();
-        if (result == ContentDialogResult.Primary)
+        var textBoxDialogViewModel = new TextBoxDialogViewModel();
+        var result  = await Dialog.ShowModal<TextBoxDialog, TextBoxDialogViewModel>(textBoxDialogViewModel, options: options);
+        if (result == DialogResult.OK)
         {
             var currentNode = FindNodeByPath(_rootNode, path);
             if (currentNode != null)
             {
-                var directory = new DocumentTreeNode()
+                var directory = new Node()
                 {
-                    Name = ((TextBox)dialog.Content).Text,
-                    Path = path + "/" + ((TextBox)dialog.Content).Text,
+                    Name = textBoxDialogViewModel.Content,
+                    Path = path + "/" + textBoxDialogViewModel.Content,
                     IsDirectory = true,
                 };
                 InsertNode(currentNode, directory);
@@ -202,46 +207,47 @@ public class DocumentTreeViewModel : ViewModelBase
             }
         }
     }
-    
-    public ICommand OpenRenameDirectoryDialogCommand { get; }
-    private async void OpenRenameDirectoryDialog(string path)
+    private async void OpenRenameDirectoryDialog(Node node)
     {
-        var dialog = new ContentDialog()
+        var options = new DialogOptions()
         {
-            Title = "Rename Directory",
-            Content = new TextBox()
-            {
-                Watermark = "Input new directory name"
-            },
-            PrimaryButtonText = "Rename",
-            CloseButtonText = "Close",
+            Title = "Input new directory name",
+            Mode = DialogMode.None,
+            Button = DialogButton.OKCancel,
+            ShowInTaskBar = false,
+            IsCloseButtonVisible = true,
+            StartupLocation = WindowStartupLocation.CenterOwner,
         };
-        
-        var result = await dialog.ShowAsync();
-        if (result == ContentDialogResult.Primary)
+        var textBoxDialogViewModel = new TextBoxDialogViewModel()
         {
-            var currentNode = FindNodeByPath(_rootNode, path);
+            Content = node.Name,
+        };
+        var result  = await Dialog.ShowModal<TextBoxDialog, TextBoxDialogViewModel>(textBoxDialogViewModel, options: options);
+        if (result == DialogResult.OK)
+        {
+            var currentNode = FindNodeByPath(_rootNode, node.Path);
             if (currentNode != null)
             {
-                currentNode.Name = ((TextBox)dialog.Content).Text;
-                currentNode.Path = Path.GetDirectoryName(path) + "/" + ((TextBox)dialog.Content).Text;
-                await _fileSystemService.RenameDirectoryAsync(path, currentNode.Path);
+                currentNode.Name = textBoxDialogViewModel.Content;
+                currentNode.Path = Path.GetDirectoryName(node.Path) + "/" + textBoxDialogViewModel.Content;
+                await _fileSystemService.RenameDirectoryAsync(node.Path, currentNode.Path);
             }
         }
     }
-    
-    public ICommand OpenDeleteDirectoryDialogCommand { get; }
     private async void OpenDeleteDirectoryDialog(string path)
     {
-        var dialog = new ContentDialog()
+        var options = new DialogOptions()
         {
-            Title = "Delete Directory",
-            PrimaryButtonText = "Delete",
-            CloseButtonText = "Close",
+            Title = "Are you sure you want to delete the selected directory?",
+            Mode = DialogMode.None,
+            Button = DialogButton.OKCancel,
+            ShowInTaskBar = false,
+            IsCloseButtonVisible = true,
+            StartupLocation = WindowStartupLocation.CenterOwner,
         };
-        
-        var result = await dialog.ShowAsync();
-        if (result == ContentDialogResult.Primary)
+        var baseDialogViewModel = new BaseDialogViewModel();
+        var result  = await Dialog.ShowModal<BaseDialog, BaseDialogViewModel>(baseDialogViewModel, options: options);
+        if (result == DialogResult.OK)
         {
             var currentNode = FindNodeByPath(_rootNode, path);
             if (currentNode != null)
@@ -253,31 +259,28 @@ public class DocumentTreeViewModel : ViewModelBase
             }
         }
     }
-    
-    public ICommand OpenCreateFileDialogCommand { get; }
     private async void OpenCreateFileDialog(string path)
     {
-        var dialog = new ContentDialog()
+        var options = new DialogOptions()
         {
-            Title = "Create File",
-            Content = new TextBox()
-            {
-                Watermark = "Input file name"
-            },
-            PrimaryButtonText = "Create",
-            CloseButtonText = "Close",
+            Title = "Input file name",
+            Mode = DialogMode.None,
+            Button = DialogButton.OKCancel,
+            ShowInTaskBar = false,
+            IsCloseButtonVisible = true,
+            StartupLocation = WindowStartupLocation.CenterOwner,
         };
-        
-        var result = await dialog.ShowAsync();
-        if (result == ContentDialogResult.Primary)
+        var textBoxDialogViewModel = new TextBoxDialogViewModel();
+        var result  = await Dialog.ShowModal<TextBoxDialog, TextBoxDialogViewModel>(textBoxDialogViewModel, options: options);
+        if (result == DialogResult.OK)
         {
             var currentNode = FindNodeByPath(_rootNode, path);
             if (currentNode != null)
             {
-                var file = new DocumentTreeNode()
+                var file = new Node()
                 {
-                    Name = ((TextBox)dialog.Content).Text,
-                    Path = path + "/" + ((TextBox)dialog.Content).Text,
+                    Name = textBoxDialogViewModel.Content,
+                    Path = path + "/" + textBoxDialogViewModel.Content,
                     IsDirectory = false,
                 };
                 InsertNode(currentNode, file);
@@ -285,46 +288,47 @@ public class DocumentTreeViewModel : ViewModelBase
             }
         }
     }
-    
-    public ICommand OpenRenameFileDialogCommand { get; }
-    private async void OpenRenameFileDialog(string path)
+    private async void OpenRenameFileDialog(Node node)
     {
-        var dialog = new ContentDialog()
+        var options = new DialogOptions()
         {
-            Title = "Rename File",
-            Content = new TextBox()
-            {
-                Watermark = "Input new file name"
-            },
-            PrimaryButtonText = "Rename",
-            CloseButtonText = "Close",
+            Title = "Input new file name",
+            Mode = DialogMode.None,
+            Button = DialogButton.OKCancel,
+            ShowInTaskBar = false,
+            IsCloseButtonVisible = true,
+            StartupLocation = WindowStartupLocation.CenterOwner,
         };
-        
-        var result = await dialog.ShowAsync();
-        if (result == ContentDialogResult.Primary)
+        var textBoxDialogViewModel = new TextBoxDialogViewModel()
         {
-            var currentNode = FindNodeByPath(_rootNode, path);
+            Content = node.Name,
+        };
+        var result  = await Dialog.ShowModal<TextBoxDialog, TextBoxDialogViewModel>(textBoxDialogViewModel, options: options);
+        if (result == DialogResult.OK)
+        {
+            var currentNode = FindNodeByPath(_rootNode, node.Path);
             if (currentNode != null)
             {
-                currentNode.Name = ((TextBox)dialog.Content).Text;
-                currentNode.Path = Path.GetDirectoryName(path) + "/" + ((TextBox)dialog.Content).Text;
-                await _fileSystemService.RenameFileAsync(path, currentNode.Path);
+                currentNode.Name = textBoxDialogViewModel.Content;
+                currentNode.Path = Path.GetDirectoryName(node.Path) + "/" + textBoxDialogViewModel.Content;
+                await _fileSystemService.RenameDirectoryAsync(node.Path, currentNode.Path);
             }
         }
     }
-    
-    public ICommand OpenDeleteFileDialogCommand { get; }
     private async void OpenDeleteFileDialog(string path)
     {
-        var dialog = new ContentDialog()
+        var options = new DialogOptions()
         {
-            Title = "Delete File",
-            PrimaryButtonText = "Delete",
-            CloseButtonText = "Close",
+            Title = "Are you sure you want to delete the selected file?",
+            Mode = DialogMode.None,
+            Button = DialogButton.OKCancel,
+            ShowInTaskBar = false,
+            IsCloseButtonVisible = true,
+            StartupLocation = WindowStartupLocation.CenterOwner,
         };
-        
-        var result = await dialog.ShowAsync();
-        if (result == ContentDialogResult.Primary)
+        var baseDialogViewModel = new BaseDialogViewModel();
+        var result  = await Dialog.ShowModal<BaseDialog, BaseDialogViewModel>(baseDialogViewModel, options: options);
+        if (result == DialogResult.OK)
         {
             var currentNode = FindNodeByPath(_rootNode, path);
             if (currentNode != null)

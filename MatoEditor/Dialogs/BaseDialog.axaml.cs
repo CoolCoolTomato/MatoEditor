@@ -2,11 +2,11 @@
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace MatoEditor.Views;
+namespace MatoEditor.Dialogs;
 
-public partial class DocumentTree : UserControl
+public partial class BaseDialog : UserControl
 {
-    public DocumentTree()
+    public BaseDialog()
     {
         InitializeComponent();
     }

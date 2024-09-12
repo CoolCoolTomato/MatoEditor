@@ -8,17 +8,6 @@ namespace MatoEditor.Services;
 
 public class FileSystemService : IFileSystemService
 {
-    public async Task<bool> DirectoryExistsAsync(string path)
-    {
-        try
-        {
-            return await Task.FromResult(Directory.Exists(path));
-        }
-        catch (Exception)
-        {
-            return false;
-        }        
-    }
     public async Task<IEnumerable<DirectoryInfo>> GetSubDirectories(string path)
     {
         try
@@ -48,6 +37,18 @@ public class FileSystemService : IFileSystemService
         {
             return Enumerable.Empty<FileInfo>();
         }
+    }
+    
+    public async Task<bool> DirectoryExistsAsync(string path)
+    {
+        try
+        {
+            return await Task.FromResult(Directory.Exists(path));
+        }
+        catch (Exception)
+        {
+            return false;
+        }        
     }
     public async Task<bool> CreateDirectoryAsync(string path)
     {
@@ -85,6 +86,7 @@ public class FileSystemService : IFileSystemService
             return false;
         }
     }
+    
     public async Task<bool> FileExistsAsync(string path)
     {
         try

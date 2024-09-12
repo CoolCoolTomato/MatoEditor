@@ -2,10 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="MatoEditor.App"
              xmlns:local="using:MatoEditor"
-             xmlns:sty="using:FluentAvalonia.Styling"
-             xmlns:ui="using:FluentAvalonia.UI.Controls"
-             xmlns:uip="using:FluentAvalonia.UI.Controls.Primitives"
              xmlns:semi="https://irihi.tech/semi"
+             xmlns:u-semi="https://irihi.tech/ursa/themes/semi"
              RequestedThemeVariant="Light">
              <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
@@ -15,8 +13,8 @@
   
     <Application.Styles>
         <FluentTheme />
-        <sty:FluentAvaloniaTheme />
         <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
-        <semi:SemiTheme Locale="zh-CN" />
+        <semi:SemiTheme Locale="en-US" />
+        <u-semi:SemiTheme Locale="en-US"/>
     </Application.Styles>
 </Application>
