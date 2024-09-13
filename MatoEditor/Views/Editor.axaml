@@ -5,7 +5,6 @@
              xmlns:viewModels="clr-namespace:MatoEditor.ViewModels"
              xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
              xmlns:utils="clr-namespace:MatoEditor.utils"
-             xmlns:htmlRenderer="clr-namespace:TheArtOfDev.HtmlRenderer.Avalonia;assembly=Avalonia.HtmlRenderer"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MatoEditor.Views.Editor"
              x:DataType="viewModels:EditorViewModel">
@@ -109,30 +108,29 @@
                         <Svg Path="avares://MatoEditor/Assets/Table.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
                     </Button>
                 </WrapPanel>
-                <ScrollViewer Grid.Row="1" Margin="5">
-                    <avaloniaEdit:TextEditor
-                        Name="TextEditor"
-                        Margin="0"
-                        Foreground="Black"
-                        SyntaxHighlighting="C#"
-                        HorizontalScrollBarVisibility="Auto"
-                        VerticalScrollBarVisibility="Auto"
-                        FontFamily="{DynamicResource CodeFontFamily}" 
-                        FontWeight="Normal" 
-                        FontSize="14"
-                        WordWrap="True">
-                        <Interaction.Behaviors>
-                            <utils:AvalonEditBehavior Text="{Binding ContentString, Mode=TwoWay}"/>
-                        </Interaction.Behaviors>
-                    </avaloniaEdit:TextEditor>
-                </ScrollViewer>
+                <avaloniaEdit:TextEditor
+                    Grid.Row="1" 
+                    Margin="0"
+                    Name="TextEditor"
+                    Foreground="Black"
+                    SyntaxHighlighting="C#"
+                    HorizontalScrollBarVisibility="Auto"
+                    VerticalScrollBarVisibility="Auto"
+                    FontFamily="{DynamicResource CodeFontFamily}" 
+                    FontWeight="Normal" 
+                    FontSize="14"
+                    WordWrap="True">
+                    <Interaction.Behaviors>
+                        <utils:AvalonEditBehavior Text="{Binding ContentString, Mode=TwoWay}"/>
+                    </Interaction.Behaviors>
+                </avaloniaEdit:TextEditor>
             </Grid>
             <Panel Grid.Row="0" 
                    Grid.Column="{Binding ViewerGridField.Column}" 
                    Grid.ColumnSpan="{Binding ViewerGridField.ColumnSpan}" 
                    IsVisible="{Binding ViewerVisible}"
                    ZIndex="0">
-                <htmlRenderer:HtmlPanel Text="{Binding ContentHtml}"/>
+                <WebView HtmlContent="{Binding ContentHtml}"/>
             </Panel>
         </Grid>
     </DockPanel>

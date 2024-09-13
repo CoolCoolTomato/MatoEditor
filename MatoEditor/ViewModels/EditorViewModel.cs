@@ -2,8 +2,8 @@
 using System.Windows.Input;
 using Avalonia.Controls;
 using AvaloniaEdit;
-using Markdig;
 using MatoEditor.Services;
+using MatoEditor.utils.Markdown;
 using ReactiveUI;
 
 namespace MatoEditor.ViewModels;
@@ -147,7 +147,7 @@ public class EditorViewModel : ViewModelBase
     }
     private void ConvertMarkdown()
     {
-        ContentHtml = ContentString == "" ? "<br/>" : Markdown.ToHtml(ContentString);
+        ContentHtml = ContentString == "" ? "<br/>" : MarkdownConverter.ConvertMarkdownToHtml(ContentString);
     }
     private async void UpdateContentString(string filePath)
     {
