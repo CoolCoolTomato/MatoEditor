@@ -6,9 +6,36 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MatoEditor.Views.Navigation"
              x:DataType="viewModels:NavigationViewModel">
-    <Menu>
-        <MenuItem Header="_File">
-            <MenuItem Header="_Open" Command="{Binding SelectDirectoryCommand}"/>
-        </MenuItem>
-    </Menu>
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Menu Grid.Column="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Open" Command="{Binding SelectDirectoryCommand}"/>
+            </MenuItem>
+        </Menu>
+        <StackPanel Grid.Column="1">
+            <Button>
+                <Svg Path="avares://MatoEditor/Assets/Save.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+            </Button>
+        </StackPanel>
+        <TextBlock Grid.Column="2" Text="{Binding FilePath}"/>
+        <Panel Grid.Column="3"/>
+        <StackPanel Grid.Column="4" Orientation="Horizontal" DockPanel.Dock="Top">
+            <Button Command="{Binding SetEditorModeCommand}" CommandParameter="edit">
+                <Svg Path="avares://MatoEditor/Assets/Editor.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+            </Button>    
+            <Button Command="{Binding SetEditorModeCommand}" CommandParameter="view">
+                <Svg Path="avares://MatoEditor/Assets/Viewer.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+            </Button>
+            <Button Command="{Binding SetEditorModeCommand}" CommandParameter="all">
+                <Svg Path="avares://MatoEditor/Assets/EditorViewer.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+            </Button>    
+        </StackPanel>
+    </Grid>
 </UserControl>

@@ -5,133 +5,102 @@
              xmlns:viewModels="clr-namespace:MatoEditor.ViewModels"
              xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
              xmlns:utils="clr-namespace:MatoEditor.utils"
+             xmlns:u="https://irihi.tech/ursa"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MatoEditor.Views.Editor"
              x:DataType="viewModels:EditorViewModel">
-    <DockPanel>
-        <Grid DockPanel.Dock="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0">
-                <Button>
-                    <Svg Path="avares://MatoEditor/Assets/Save.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
-                </Button>
-            </StackPanel>
-            <TextBlock Grid.Column="1" Text="{Binding FilePath}"/>
-            <Panel Grid.Column="2"/>
-            <StackPanel Grid.Column="3" Orientation="Horizontal" DockPanel.Dock="Top">
-                <Button Command="{Binding SetEditorModeCommand}" CommandParameter="edit">
-                    <Svg Path="avares://MatoEditor/Assets/Editor.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
-                </Button>    
-                <Button Command="{Binding SetEditorModeCommand}" CommandParameter="view">
-                    <Svg Path="avares://MatoEditor/Assets/Viewer.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
-                </Button>
-                <Button Command="{Binding SetEditorModeCommand}" CommandParameter="all">
-                    <Svg Path="avares://MatoEditor/Assets/EditorViewer.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
-                </Button>    
-            </StackPanel>
-        </Grid>
-        <Grid>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        
+        <Grid 
+            Grid.Row="0" 
+            Grid.Column="{Binding EditorGridField.Column}" 
+            Grid.ColumnSpan="{Binding EditorGridField.ColumnSpan}" 
+            IsVisible="{Binding EditorVisible}">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
             
-            <Grid 
-                Grid.Row="0" 
-                Grid.Column="{Binding EditorGridField.Column}" 
-                Grid.ColumnSpan="{Binding EditorGridField.ColumnSpan}" 
-                IsVisible="{Binding EditorVisible}"
-                Margin="10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                
-                <WrapPanel Grid.Row="0" Margin="5">
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="# ">
-                        <Svg Path="avares://MatoEditor/Assets/H1.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="## ">
-                        <Svg Path="avares://MatoEditor/Assets/H2.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="### ">
-                        <Svg Path="avares://MatoEditor/Assets/H3.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="#### ">
-                        <Svg Path="avares://MatoEditor/Assets/H4.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="##### ">
-                        <Svg Path="avares://MatoEditor/Assets/H5.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="###### ">
-                        <Svg Path="avares://MatoEditor/Assets/H6.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Border Width="1" Height="13" Background="Black" Margin="10,0" />
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="* *">
-                        <Svg Path="avares://MatoEditor/Assets/I.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="** **">
-                        <Svg Path="avares://MatoEditor/Assets/B.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="~~ ~~">
-                        <Svg Path="avares://MatoEditor/Assets/Del.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="> ">
-                        <Svg Path="avares://MatoEditor/Assets/Quote.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="---">
-                        <Svg Path="avares://MatoEditor/Assets/Line.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Border Width="1" Height="13" Background="Black" Margin="10,0" />
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="- ">
-                        <Svg Path="avares://MatoEditor/Assets/UList.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="1. ">
-                        <Svg Path="avares://MatoEditor/Assets/OList.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Border Width="1" Height="13" Background="Black" Margin="10,0" />
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="` `">
-                        <Svg Path="avares://MatoEditor/Assets/Code.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="``` ```">
-                        <Svg Path="avares://MatoEditor/Assets/CodeBlock.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                    <Button Command="{Binding InsertSymbolCommand}" CommandParameter="">
-                        <Svg Path="avares://MatoEditor/Assets/Table.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
-                    </Button>
-                </WrapPanel>
-                <avaloniaEdit:TextEditor
-                    Grid.Row="1" 
-                    Margin="0"
-                    Name="TextEditor"
-                    Foreground="Black"
-                    SyntaxHighlighting="C#"
-                    HorizontalScrollBarVisibility="Auto"
-                    VerticalScrollBarVisibility="Auto"
-                    FontFamily="{DynamicResource CodeFontFamily}" 
-                    FontWeight="Normal" 
-                    FontSize="14"
-                    WordWrap="True">
-                    <Interaction.Behaviors>
-                        <utils:AvalonEditBehavior Text="{Binding ContentString, Mode=TwoWay}"/>
-                    </Interaction.Behaviors>
-                </avaloniaEdit:TextEditor>
-            </Grid>
-            <Panel Grid.Row="0" 
-                   Grid.Column="{Binding ViewerGridField.Column}" 
-                   Grid.ColumnSpan="{Binding ViewerGridField.ColumnSpan}" 
-                   IsVisible="{Binding ViewerVisible}"
-                   ZIndex="0">
-                <WebView HtmlContent="{Binding ContentHtml}"/>
-            </Panel>
+            <WrapPanel Grid.Row="0" Margin="5">
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="# ">
+                    <Svg Path="avares://MatoEditor/Assets/H1.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="## ">
+                    <Svg Path="avares://MatoEditor/Assets/H2.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="### ">
+                    <Svg Path="avares://MatoEditor/Assets/H3.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="#### ">
+                    <Svg Path="avares://MatoEditor/Assets/H4.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="##### ">
+                    <Svg Path="avares://MatoEditor/Assets/H5.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="###### ">
+                    <Svg Path="avares://MatoEditor/Assets/H6.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="* *">
+                    <Svg Path="avares://MatoEditor/Assets/I.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="** **">
+                    <Svg Path="avares://MatoEditor/Assets/B.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="~~ ~~">
+                    <Svg Path="avares://MatoEditor/Assets/Del.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="> ">
+                    <Svg Path="avares://MatoEditor/Assets/Quote.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="---">
+                    <Svg Path="avares://MatoEditor/Assets/Line.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="- ">
+                    <Svg Path="avares://MatoEditor/Assets/UList.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="1. ">
+                    <Svg Path="avares://MatoEditor/Assets/OList.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="` `">
+                    <Svg Path="avares://MatoEditor/Assets/Code.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="``` ```">
+                    <Svg Path="avares://MatoEditor/Assets/CodeBlock.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="">
+                    <Svg Path="avares://MatoEditor/Assets/Table.svg" Css="path {fill:#000000}" Width="13" Height="13"/>
+                </Button>
+            </WrapPanel>
+            <avaloniaEdit:TextEditor
+                Grid.Row="1" 
+                Margin="5"
+                Name="TextEditor"
+                Foreground="Black"
+                SyntaxHighlighting="C#"
+                HorizontalScrollBarVisibility="Auto"
+                VerticalScrollBarVisibility="Auto"
+                FontFamily="{DynamicResource CodeFontFamily}" 
+                FontWeight="Normal" 
+                FontSize="14"
+                WordWrap="True">
+                <Interaction.Behaviors>
+                    <utils:AvalonEditBehavior Text="{Binding ContentString, Mode=TwoWay}"/>
+                </Interaction.Behaviors>
+            </avaloniaEdit:TextEditor>
         </Grid>
-    </DockPanel>
+        <Panel Grid.Row="0" 
+               Grid.Column="{Binding ViewerGridField.Column}" 
+               Grid.ColumnSpan="{Binding ViewerGridField.ColumnSpan}"
+               IsVisible="{Binding ViewerVisible}"
+               ZIndex="0">
+            <WebView HtmlContent="{Binding ContentHtml}"/>
+        </Panel>
+    </Grid>
 </UserControl>

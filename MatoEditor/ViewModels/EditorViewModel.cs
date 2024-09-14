@@ -10,16 +10,16 @@ namespace MatoEditor.ViewModels;
 
 public class EditorViewModel : ViewModelBase
 {
-    public EditorViewModel(Window window, IFileSystemService fileSystemService, StorageService storageService)
+    public EditorViewModel(Window window, IFileSystemService fileSystemService, StorageService storageService, NavigationViewModel navigationViewModel)
     {
         _window = window;
         _fileSystemService = fileSystemService;
         _storageService = storageService;
+        _navigationViewModel = navigationViewModel;
         
         _textEditor = _window.FindControl<UserControl>("EditorUserControl").FindControl<TextEditor>("TextEditor");
         InsertSymbolCommand = ReactiveCommand.Create<string>(InsertSymbol);
         
-        FilePath = "";
         ContentString = "";
         ContentHtml = "";
         
@@ -36,11 +36,15 @@ public class EditorViewModel : ViewModelBase
             ColumnSpan = 1
         };
         SetEditorModeCommand = ReactiveCommand.Create<string>(SetEditorMode);
+        _navigationViewModel.WhenAnyValue(x => x.EditorMode)
+            .Subscribe(EditorMode =>
+            {
+                SetEditorMode(EditorMode);
+            });
         _storageService.WhenAnyValue(x => x.CurrentFilePath)
             .Subscribe(CurrentFilePath =>
             {
                 UpdateContentString(CurrentFilePath);
-                FilePath = CurrentFilePath;
             });
         
         this.WhenAnyValue(x => x.ContentString).Subscribe(_ =>
@@ -52,13 +56,7 @@ public class EditorViewModel : ViewModelBase
     private readonly Window _window;
     private readonly IFileSystemService _fileSystemService;
     private StorageService _storageService;
-    
-    private string _filePath;
-    public string FilePath
-    {
-        get => _filePath;
-        set => this.RaiseAndSetIfChanged(ref _filePath, value);
-    }
+    private NavigationViewModel _navigationViewModel;
     
     private string _contentString;
     public string ContentString

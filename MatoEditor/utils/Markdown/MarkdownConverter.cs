@@ -15,7 +15,7 @@ public class MarkdownConverter
                 margin: 0 auto;
                 padding: 20px;
             }
-            h1, h2, h3 {
+            h1, h2, h3, h4, h5, h6 {
                 color: #2c3e50;
             }
             code {
@@ -50,15 +50,11 @@ public class MarkdownConverter
 
     public static string ConvertMarkdownToHtml(string markdown)
     {
-        // Configure Markdig
         var pipeline = new MarkdownPipelineBuilder()
             .UseAdvancedExtensions()
             .Build();
-
-        // Convert Markdown to HTML
         string htmlBody = Markdown.ToHtml(markdown, pipeline);
 
-        // Combine custom CSS with HTML body
         var htmlBuilder = new StringBuilder();
         htmlBuilder.AppendLine("<!DOCTYPE html>");
         htmlBuilder.AppendLine("<html lang=\"en\">");

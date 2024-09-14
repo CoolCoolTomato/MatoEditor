@@ -16,5 +16,6 @@
         <StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
         <semi:SemiTheme Locale="en-US" />
         <u-semi:SemiTheme Locale="en-US"/>
+        <StyleInclude Source="avares://MatoEditor/Styles/Styles.axaml"/>
     </Application.Styles>
 </Application>
