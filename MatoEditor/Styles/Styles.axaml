@@ -13,6 +13,16 @@
     <Style Selector="Button.editor:pointerover /template/ ContentPresenter">
         <Setter Property="Background" Value="#F8F8F8"/>
     </Style>
+    
+    <Style Selector="Button.navigation">
+        <Setter Property="Padding" Value="10 5 10 5"/>
+        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="Foreground" Value="#000000"/>
+    </Style>
+    <Style Selector="Button.navigation:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="#F8F8F8"/>
+    </Style>
+    
     <Style Selector="Button:pointerover">
         <Setter Property="Cursor" Value="Hand"/>
     </Style>

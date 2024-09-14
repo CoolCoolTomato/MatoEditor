@@ -10,30 +10,40 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
-        <Menu Grid.Column="0">
-            <MenuItem Header="_File">
-                <MenuItem Header="_Open" Command="{Binding SelectDirectoryCommand}"/>
-            </MenuItem>
-        </Menu>
-        <StackPanel Grid.Column="1">
-            <Button>
-                <Svg Path="avares://MatoEditor/Assets/Save.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+        
+        <StackPanel Grid.Column="1" Orientation="Horizontal">
+            <Button Classes="navigation" Command="{Binding SelectDirectoryCommand}">
+                <StackPanel Orientation="Horizontal">
+                    <Svg Margin="0 0 5 0" Path="avares://MatoEditor/Assets/Open.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+                    <TextBlock FontWeight="Normal" Text="Open"/>
+                </StackPanel>
+            </Button>
+            <Button Classes="navigation">
+                <StackPanel Orientation="Horizontal">
+                    <Svg Margin="0 0 5 0" Path="avares://MatoEditor/Assets/Save.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+                    <TextBlock FontWeight="Normal" Text="Save"/>
+                </StackPanel>
             </Button>
         </StackPanel>
-        <TextBlock Grid.Column="2" Text="{Binding FilePath}"/>
+        <StackPanel Grid.Column="2" Orientation="Horizontal">
+            <Svg Margin="0 0 5 0" Path="avares://MatoEditor/Assets/Path.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+            <TextBlock 
+                VerticalAlignment="Center" 
+                FontWeight="Bold"
+                Text="{Binding FilePath}"/>
+        </StackPanel>
         <Panel Grid.Column="3"/>
-        <StackPanel Grid.Column="4" Orientation="Horizontal" DockPanel.Dock="Top">
-            <Button Command="{Binding SetEditorModeCommand}" CommandParameter="edit">
+        <StackPanel Grid.Column="4" Orientation="Horizontal">
+            <Button Classes="navigation" Command="{Binding SetEditorModeCommand}" CommandParameter="edit">
                 <Svg Path="avares://MatoEditor/Assets/Editor.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
             </Button>    
-            <Button Command="{Binding SetEditorModeCommand}" CommandParameter="view">
+            <Button Classes="navigation" Command="{Binding SetEditorModeCommand}" CommandParameter="view">
                 <Svg Path="avares://MatoEditor/Assets/Viewer.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
             </Button>
-            <Button Command="{Binding SetEditorModeCommand}" CommandParameter="all">
+            <Button Classes="navigation" Command="{Binding SetEditorModeCommand}" CommandParameter="all">
                 <Svg Path="avares://MatoEditor/Assets/EditorViewer.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
             </Button>    
         </StackPanel>
