@@ -23,7 +23,7 @@
             </Grid.ColumnDefinitions>
             
             <views:DocumentTree Grid.Column="0" DataContext="{Binding DocumentTreeViewModel}"/>
-            <GridSplitter Grid.Column="1"/>
+            <GridSplitter Grid.Column="1" Background="{DynamicResource ForegroundColor}"/>
             <views:Editor Grid.Column="2" Name="EditorUserControl" DataContext="{Binding EditorViewModel}"/>
         </Grid>
     </DockPanel>

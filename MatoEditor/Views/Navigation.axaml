@@ -4,9 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:MatoEditor.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:u="https://irihi.tech/ursa"
+             xmlns:converters="clr-namespace:MatoEditor.utils.Converters"
              x:Class="MatoEditor.Views.Navigation"
              x:DataType="viewModels:NavigationViewModel">
-    <Grid Margin="5">
+    <UserControl.Resources>
+        <converters:SvgConverter x:Key="SvgConverter"/>
+    </UserControl.Resources>
+    <Grid Margin="5" Background="{DynamicResource BackgroundColor}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="Auto"/>
@@ -17,16 +22,27 @@
         <StackPanel Grid.Column="1" Orientation="Horizontal">
             <Button Classes="navigation" Command="{Binding SelectDirectoryCommand}">
                 <StackPanel Orientation="Horizontal">
-                    <Svg Margin="0 0 5 0" Path="avares://MatoEditor/Assets/Open.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+                    <u:TwoTonePathIcon
+                        Margin="0 0 5 0"
+                        Width="13"
+                        Height="13"
+                        Data="{Binding Source='avares://MatoEditor/Assets/Open.svg', Converter={StaticResource SvgConverter}}"
+                        Foreground="{DynamicResource ForegroundColor}"/>
                     <TextBlock FontWeight="Normal" Text="Open"/>
                 </StackPanel>
             </Button>
             <Button Classes="navigation">
                 <StackPanel Orientation="Horizontal">
-                    <Svg Margin="0 0 5 0" Path="avares://MatoEditor/Assets/Save.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+                    <u:TwoTonePathIcon
+                        Margin="0 0 5 0"
+                        Width="13"
+                        Height="13"
+                        Data="{Binding Source='avares://MatoEditor/Assets/Save.svg', Converter={StaticResource SvgConverter}}"
+                        Foreground="{DynamicResource ForegroundColor}"/>
                     <TextBlock FontWeight="Normal" Text="Save"/>
                 </StackPanel>
             </Button>
+            <u:ThemeToggleButton Mode="Controller"/>
         </StackPanel>
         <StackPanel Grid.Column="2" Orientation="Horizontal">
             <Svg Margin="0 0 5 0" Path="avares://MatoEditor/Assets/Path.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
@@ -38,13 +54,25 @@
         <Panel Grid.Column="3"/>
         <StackPanel Grid.Column="4" Orientation="Horizontal">
             <Button Classes="navigation" Command="{Binding SetEditorModeCommand}" CommandParameter="edit">
-                <Svg Path="avares://MatoEditor/Assets/Editor.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+                <u:TwoTonePathIcon
+                    Width="13"
+                    Height="13"
+                    Data="{Binding Source='avares://MatoEditor/Assets/Editor.svg', Converter={StaticResource SvgConverter}}"
+                    Foreground="{DynamicResource ForegroundColor}"/>
             </Button>    
             <Button Classes="navigation" Command="{Binding SetEditorModeCommand}" CommandParameter="view">
-                <Svg Path="avares://MatoEditor/Assets/Viewer.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+                <u:TwoTonePathIcon
+                    Width="13"
+                    Height="13"
+                    Data="{Binding Source='avares://MatoEditor/Assets/Viewer.svg', Converter={StaticResource SvgConverter}}"
+                    Foreground="{DynamicResource ForegroundColor}"/>
             </Button>
             <Button Classes="navigation" Command="{Binding SetEditorModeCommand}" CommandParameter="all">
-                <Svg Path="avares://MatoEditor/Assets/EditorViewer.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+                <u:TwoTonePathIcon
+                    Width="13"
+                    Height="13"
+                    Data="{Binding Source='avares://MatoEditor/Assets/EditorViewer.svg', Converter={StaticResource SvgConverter}}"
+                    Foreground="{DynamicResource ForegroundColor}"/>
             </Button>    
         </StackPanel>
     </Grid>

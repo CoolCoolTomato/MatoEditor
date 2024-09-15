@@ -5,22 +5,39 @@
             <!-- Add Controls for Previewer Here -->
         </Border>
     </Design.PreviewWith>
-
+    
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <Color x:Key="BackgroundColor">#FFFFFF</Color>
+                    <Color x:Key="ForegroundColor">#202020</Color>
+                    <Color x:Key="HoverBackgroundColor">#F8F8F8</Color>
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <Color x:Key="BackgroundColor">#202020</Color>
+                    <Color x:Key="ForegroundColor">#F0F0F0</Color>
+                    <Color x:Key="HoverBackgroundColor">#303030</Color>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+    </Styles.Resources>
+    
     <Style Selector="Button.editor">
         <Setter Property="Padding" Value="10 5 10 5"/>
-        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
     </Style>
     <Style Selector="Button.editor:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="#F8F8F8"/>
+        <Setter Property="Background" Value="{DynamicResource HoverBackgroundColor}"/>
     </Style>
     
     <Style Selector="Button.navigation">
         <Setter Property="Padding" Value="10 5 10 5"/>
-        <Setter Property="Background" Value="#FFFFFF"/>
-        <Setter Property="Foreground" Value="#000000"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
+        <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
     </Style>
     <Style Selector="Button.navigation:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="#F8F8F8"/>
+        <Setter Property="Background" Value="{DynamicResource HoverBackgroundColor}"/>
     </Style>
     
     <Style Selector="Button:pointerover">

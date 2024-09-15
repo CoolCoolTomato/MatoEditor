@@ -1,8 +1,10 @@
 using System;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
+using Avalonia.Styling;
 using AvaloniaWebView;
 using MatoEditor.Services;
 using MatoEditor.ViewModels;

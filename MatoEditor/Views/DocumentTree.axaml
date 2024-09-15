@@ -3,10 +3,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:MatoEditor.ViewModels"
+             xmlns:converters="clr-namespace:MatoEditor.utils.Converters"
+             xmlns:u="https://irihi.tech/ursa"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MatoEditor.Views.DocumentTree"
              x:DataType="viewModels:DocumentTreeViewModel">
-    <Panel>
+    <UserControl.Resources>
+        <converters:SvgConverter x:Key="SvgConverter"/>
+    </UserControl.Resources>
+    <Panel Background="{DynamicResource BackgroundColor}">
         <TreeView 
             ItemsSource="{Binding DocumentTree}" 
             SelectedItem="{Binding SelectedNode}">
@@ -24,8 +29,18 @@
                             </ContextMenu>
                         </StackPanel.ContextMenu>
                         <Panel Margin="0 0 5 0 ">
-                            <Svg IsVisible="{Binding IsDirectory}" Path="avares://MatoEditor/Assets/Directory.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
-                            <Svg IsVisible="{Binding !IsDirectory}" Path="avares://MatoEditor/Assets/File.svg" Css="path {fill:#000000} rect {fill:#000000}" Width="13" Height="13"/>
+                            <u:TwoTonePathIcon
+                                IsVisible="{Binding IsDirectory}"
+                                Width="13"
+                                Height="13"
+                                Data="{Binding Source='avares://MatoEditor/Assets/Directory.svg', Converter={StaticResource SvgConverter}}"
+                                Foreground="{DynamicResource ForegroundColor}"/>
+                            <u:TwoTonePathIcon
+                                IsVisible="{Binding !IsDirectory}"
+                                Width="13"
+                                Height="13"
+                                Data="{Binding Source='avares://MatoEditor/Assets/File.svg', Converter={StaticResource SvgConverter}}"
+                                Foreground="{DynamicResource ForegroundColor}"/>
                         </Panel>
                         <TextBlock Text="{Binding Name}"/>
                     </StackPanel>
