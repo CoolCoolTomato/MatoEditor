@@ -15,9 +15,9 @@
                     <Color x:Key="HoverBackgroundColor">#F8F8F8</Color>
                 </ResourceDictionary>
                 <ResourceDictionary x:Key="Dark">
-                    <Color x:Key="BackgroundColor">#202020</Color>
+                    <Color x:Key="BackgroundColor">#101010</Color>
                     <Color x:Key="ForegroundColor">#F0F0F0</Color>
-                    <Color x:Key="HoverBackgroundColor">#303030</Color>
+                    <Color x:Key="HoverBackgroundColor">#202020</Color>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
         </ResourceDictionary>

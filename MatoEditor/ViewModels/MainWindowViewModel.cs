@@ -14,8 +14,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(Window window, IFileSystemService fileSystemService, StorageService storageService, ConfigurationService configurationService)
     {
         _window = window;
-        NavigationViewModel = new NavigationViewModel(window, storageService, configurationService);
         DocumentTreeViewModel = new DocumentTreeViewModel(fileSystemService, storageService);
-        EditorViewModel = new EditorViewModel(window, fileSystemService, storageService, NavigationViewModel);
+        EditorViewModel = new EditorViewModel(window, fileSystemService, storageService);
+        NavigationViewModel = new NavigationViewModel(window, storageService, configurationService, EditorViewModel);
     }
 }

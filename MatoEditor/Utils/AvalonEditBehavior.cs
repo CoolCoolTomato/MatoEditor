@@ -3,7 +3,7 @@ using Avalonia;
 using Avalonia.Xaml.Interactivity;
 using AvaloniaEdit;
 
-namespace MatoEditor.utils;
+namespace MatoEditor.Utils;
 
 public sealed class AvalonEditBehavior : Behavior<TextEditor>
 {

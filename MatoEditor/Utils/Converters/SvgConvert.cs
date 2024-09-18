@@ -7,7 +7,7 @@ using Avalonia.Data.Converters;
 using Avalonia.Media;
 using Avalonia.Platform;
 
-namespace MatoEditor.utils.Converters;
+namespace MatoEditor.Utils.Converters;
 
 public class SvgConverter : IValueConverter
 {

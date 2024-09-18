@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewModels="clr-namespace:MatoEditor.ViewModels"
              xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
-             xmlns:utils="clr-namespace:MatoEditor.utils"
-             xmlns:converters="clr-namespace:MatoEditor.utils.Converters"
              xmlns:u="https://irihi.tech/ursa"
+             xmlns:converters="clr-namespace:MatoEditor.Utils.Converters"
+             xmlns:utils="clr-namespace:MatoEditor.Utils"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MatoEditor.Views.Editor"
              x:DataType="viewModels:EditorViewModel">
@@ -168,7 +168,7 @@
                Grid.ColumnSpan="{Binding ViewerGridField.ColumnSpan}"
                IsVisible="{Binding ViewerVisible}"
                ZIndex="0">
-            <WebView HtmlContent="{Binding ContentHtml}"/>
+            <WebView x:Name="WebView" HtmlContent="{Binding ContentHtml}"/>
         </Panel>
     </Grid>
 </UserControl>

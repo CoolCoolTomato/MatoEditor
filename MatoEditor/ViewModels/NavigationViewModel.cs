@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Platform.Storage;
+using Avalonia.Styling;
 using MatoEditor.Services;
 using ReactiveUI;
 
@@ -10,12 +12,15 @@ namespace MatoEditor.ViewModels;
 
 public class NavigationViewModel : ViewModelBase
 {
-    public NavigationViewModel(Window window, StorageService storageService, ConfigurationService configurationService)
+    public NavigationViewModel(Window window, StorageService storageService, ConfigurationService configurationService, EditorViewModel editorViewModel)
     {
         _window = window;
         _storageService = storageService;
         _configurationService = configurationService;
+        _editorViewModel = editorViewModel;
+        
         SelectDirectoryCommand = ReactiveCommand.CreateFromTask(SelectDirectory);
+        ChangeThemeCommand = ReactiveCommand.Create(ChangeTheme);
         SetEditorModeCommand = ReactiveCommand.Create<string>(SetEditorMode);
 
         _storageService.WhenAnyValue(x => x.CurrentFilePath)
@@ -27,6 +32,7 @@ public class NavigationViewModel : ViewModelBase
     private readonly Window _window;
     private StorageService _storageService;
     private ConfigurationService _configurationService;
+    private EditorViewModel _editorViewModel;
 
     private string _filePath;
     public string FilePath
@@ -34,12 +40,7 @@ public class NavigationViewModel : ViewModelBase
         get => _filePath;
         set => this.RaiseAndSetIfChanged(ref _filePath, value);
     }
-    private string _editorMode;
-    public string EditorMode
-    {
-        get => _editorMode;
-        set => this.RaiseAndSetIfChanged(ref _editorMode, value);
-    }
+    public ICommand ChangeThemeCommand { get; }
     
     public ICommand SelectDirectoryCommand { get; }
     public ICommand SetEditorModeCommand { get; }
@@ -57,8 +58,20 @@ public class NavigationViewModel : ViewModelBase
             _configurationService.SaveConfiguration();
         }
     }
+
+    private void ChangeTheme()
+    {
+        if (Application.Current.RequestedThemeVariant == ThemeVariant.Light)
+        {
+            Application.Current.RequestedThemeVariant = ThemeVariant.Dark;
+        }
+        else
+        {
+            Application.Current.RequestedThemeVariant = ThemeVariant.Light;
+        }
+    }
     private void SetEditorMode(string mode)
     {
-        EditorMode = mode;
+        _editorViewModel.SetEditorMode(mode);
     }
 }

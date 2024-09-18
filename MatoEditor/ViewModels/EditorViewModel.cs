@@ -1,21 +1,23 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Styling;
 using AvaloniaEdit;
 using MatoEditor.Services;
-using MatoEditor.utils.Markdown;
+using MatoEditor.Utils.Markdown;
 using ReactiveUI;
 
 namespace MatoEditor.ViewModels;
 
 public class EditorViewModel : ViewModelBase
 {
-    public EditorViewModel(Window window, IFileSystemService fileSystemService, StorageService storageService, NavigationViewModel navigationViewModel)
+    public EditorViewModel(Window window, IFileSystemService fileSystemService, StorageService storageService)
     {
         _window = window;
         _fileSystemService = fileSystemService;
         _storageService = storageService;
-        _navigationViewModel = navigationViewModel;
         
         _textEditor = _window.FindControl<UserControl>("EditorUserControl").FindControl<TextEditor>("TextEditor");
         InsertSymbolCommand = ReactiveCommand.Create<string>(InsertSymbol);
@@ -35,12 +37,6 @@ public class EditorViewModel : ViewModelBase
             Column = 1,
             ColumnSpan = 1
         };
-        SetEditorModeCommand = ReactiveCommand.Create<string>(SetEditorMode);
-        _navigationViewModel.WhenAnyValue(x => x.EditorMode)
-            .Subscribe(EditorMode =>
-            {
-                SetEditorMode(EditorMode);
-            });
         _storageService.WhenAnyValue(x => x.CurrentFilePath)
             .Subscribe(CurrentFilePath =>
             {
@@ -56,7 +52,6 @@ public class EditorViewModel : ViewModelBase
     private readonly Window _window;
     private readonly IFileSystemService _fileSystemService;
     private StorageService _storageService;
-    private NavigationViewModel _navigationViewModel;
     
     private string _contentString;
     public string ContentString
@@ -100,7 +95,6 @@ public class EditorViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _viewerGridField, value);
     }
     
-    public ICommand SetEditorModeCommand { get; }
     public class GridField : ReactiveObject
     {
         public GridField()
@@ -136,7 +130,6 @@ public class EditorViewModel : ViewModelBase
             set => this.RaiseAndSetIfChanged(ref _columnSpan, value);
         }
     }
-    
     private void InsertSymbol(string symbol)
     {
         var caretOffset = _textEditor.CaretOffset;
@@ -145,7 +138,8 @@ public class EditorViewModel : ViewModelBase
     }
     private void ConvertMarkdown()
     {
-        ContentHtml = ContentString == "" ? "<br/>" : MarkdownConverter.ConvertMarkdownToHtml(ContentString);
+        var theme = Application.Current.RequestedThemeVariant == ThemeVariant.Light ? "Light" : "Dark";
+        ContentHtml = ContentString == "" ? "<br/>" : MarkdownConverter.ConvertMarkdownToHtml(ContentString, theme);
     }
     private async void UpdateContentString(string filePath)
     {
@@ -158,7 +152,7 @@ public class EditorViewModel : ViewModelBase
             _ = await _fileSystemService.WriteFileAsync(_storageService.CurrentFilePath, ContentString);
         }
     }
-    private void SetEditorMode(string mode)
+    public void SetEditorMode(string mode)
     {
         if (mode == "edit")
         {
