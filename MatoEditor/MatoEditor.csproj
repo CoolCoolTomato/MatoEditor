@@ -24,10 +24,8 @@
         <PackageReference Include="Avalonia.Xaml.Behaviors" Version="11.1.0.4" />
         <PackageReference Include="Irihi.Ursa" Version="1.2.0" />
         <PackageReference Include="Irihi.Ursa.Themes.Semi" Version="1.2.0" />
-        <PackageReference Include="Markdig" Version="0.37.0" />
+        <PackageReference Include="Markdown.Avalonia" Version="11.0.3-a1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0-preview.7.24405.7" />
         <PackageReference Include="Semi.Avalonia" Version="11.1.0.3" />
-        <PackageReference Include="WebView.Avalonia" Version="11.0.0.1" />
-        <PackageReference Include="WebView.Avalonia.Desktop" Version="11.0.0.1" />
     </ItemGroup>
 </Project>

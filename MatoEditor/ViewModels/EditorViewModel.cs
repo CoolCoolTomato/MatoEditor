@@ -6,7 +6,6 @@ using Avalonia.Controls;
 using Avalonia.Styling;
 using AvaloniaEdit;
 using MatoEditor.Services;
-using MatoEditor.Utils.Markdown;
 using ReactiveUI;
 
 namespace MatoEditor.ViewModels;
@@ -23,7 +22,6 @@ public class EditorViewModel : ViewModelBase
         InsertSymbolCommand = ReactiveCommand.Create<string>(InsertSymbol);
         
         ContentString = "";
-        ContentHtml = "";
         
         EditorVisible = true;
         ViewerVisible = true;
@@ -42,12 +40,6 @@ public class EditorViewModel : ViewModelBase
             {
                 UpdateContentString(CurrentFilePath);
             });
-        
-        this.WhenAnyValue(x => x.ContentString).Subscribe(_ =>
-        {
-            ConvertMarkdown();
-            SaveFile();
-        });
     }
     private readonly Window _window;
     private readonly IFileSystemService _fileSystemService;
@@ -59,13 +51,6 @@ public class EditorViewModel : ViewModelBase
         get => _contentString;
         set => this.RaiseAndSetIfChanged(ref _contentString, value);
     }
-    private string _contentHtml;
-    public string ContentHtml
-    {
-        get => _contentHtml;
-        set => this.RaiseAndSetIfChanged(ref _contentHtml, value);
-    }
-    
     private TextEditor _textEditor { get; set; }
     public ICommand InsertSymbolCommand { get; }
     
@@ -136,16 +121,11 @@ public class EditorViewModel : ViewModelBase
         _textEditor.Document.Insert(caretOffset, symbol);
         _textEditor.CaretOffset = caretOffset + symbol.Length;
     }
-    private void ConvertMarkdown()
-    {
-        var theme = Application.Current.RequestedThemeVariant == ThemeVariant.Light ? "Light" : "Dark";
-        ContentHtml = ContentString == "" ? "<br/>" : MarkdownConverter.ConvertMarkdownToHtml(ContentString, theme);
-    }
     private async void UpdateContentString(string filePath)
     {
         ContentString = await _fileSystemService.ReadFileAsync(filePath);
     }
-    private async void SaveFile()
+    public async Task SaveFile()
     {
         if (_storageService.CurrentFilePath != "")
         {

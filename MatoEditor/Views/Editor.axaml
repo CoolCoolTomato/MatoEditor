@@ -5,6 +5,7 @@
              xmlns:viewModels="clr-namespace:MatoEditor.ViewModels"
              xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
              xmlns:u="https://irihi.tech/ursa"
+             xmlns:md="https://github.com/whistyun/Markdown.Avalonia"
              xmlns:converters="clr-namespace:MatoEditor.Utils.Converters"
              xmlns:utils="clr-namespace:MatoEditor.Utils"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -168,7 +169,11 @@
                Grid.ColumnSpan="{Binding ViewerGridField.ColumnSpan}"
                IsVisible="{Binding ViewerVisible}"
                ZIndex="0">
-            <WebView x:Name="WebView" HtmlContent="{Binding ContentHtml}"/>
+            <md:MarkdownScrollViewer Markdown="{Binding ContentString}">
+                <md:MarkdownScrollViewer.Styles>
+                    <StyleInclude Source="avares://MatoEditor/Styles/Styles.axaml"/>
+                </md:MarkdownScrollViewer.Styles>
+            </md:MarkdownScrollViewer>
         </Panel>
     </Grid>
 </UserControl>

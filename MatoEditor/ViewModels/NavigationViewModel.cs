@@ -20,6 +20,7 @@ public class NavigationViewModel : ViewModelBase
         _editorViewModel = editorViewModel;
         
         SelectDirectoryCommand = ReactiveCommand.CreateFromTask(SelectDirectory);
+        SaveFileCommand = ReactiveCommand.CreateFromTask(SaveFile);
         ChangeThemeCommand = ReactiveCommand.Create(ChangeTheme);
         SetEditorModeCommand = ReactiveCommand.Create<string>(SetEditorMode);
 
@@ -40,9 +41,9 @@ public class NavigationViewModel : ViewModelBase
         get => _filePath;
         set => this.RaiseAndSetIfChanged(ref _filePath, value);
     }
-    public ICommand ChangeThemeCommand { get; }
-    
     public ICommand SelectDirectoryCommand { get; }
+    public ICommand SaveFileCommand { get; }
+    public ICommand ChangeThemeCommand { get; }
     public ICommand SetEditorModeCommand { get; }
     
     private async Task SelectDirectory()
@@ -58,7 +59,10 @@ public class NavigationViewModel : ViewModelBase
             _configurationService.SaveConfiguration();
         }
     }
-
+    private async Task SaveFile()
+    {
+        await _editorViewModel.SaveFile();
+    }
     private void ChangeTheme()
     {
         if (Application.Current.RequestedThemeVariant == ThemeVariant.Light)
