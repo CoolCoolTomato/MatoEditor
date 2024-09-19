@@ -35,7 +35,7 @@
         <Setter Property="Background" Value="{DynamicResource BackgroundColor}"/>
     </Style>
     <Style Selector="Button.editor:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource BackgroundColor2}"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor3}"/>
     </Style>
     
     <Style Selector="Button.navigation">
@@ -44,11 +44,14 @@
         <Setter Property="Foreground" Value="{DynamicResource ForegroundColor}"/>
     </Style>
     <Style Selector="Button.navigation:pointerover /template/ ContentPresenter">
-        <Setter Property="Background" Value="{DynamicResource BackgroundColor2}"/>
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor3}"/>
     </Style>
     
     <Style Selector="Button:pointerover">
         <Setter Property="Cursor" Value="Hand"/>
+    </Style>
+    <Style Selector="TabStripItem:selected /template/ Border#PART_SelectedPipe">
+        <Setter Property="Background" Value="{DynamicResource ForegroundColor}" />
     </Style>
     <!-- Markdown Styles -->
     <Style Selector="Border.Blockquote">

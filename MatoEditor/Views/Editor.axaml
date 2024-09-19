@@ -16,6 +16,7 @@
     </UserControl.Resources>
     <Grid Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -23,8 +24,33 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
-        <Grid 
+        <TabStrip 
             Grid.Row="0" 
+            Grid.Column="0" 
+            Grid.ColumnSpan="2" 
+            ItemsSource="{Binding FileTabs}"
+            SelectedItem="{Binding SelectedFileTab}">
+            <TabStrip.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
+                        <Button Classes="editor" Command="{Binding $parent[UserControl].((viewModels:EditorViewModel)DataContext).DeleteFileTabCommand} " 
+                                CommandParameter="{Binding Path}"
+                                Foreground="{DynamicResource ForegroundColor}"
+                                Margin="10 0 0 0">
+                            <u:TwoTonePathIcon
+                                Width="13"
+                                Height="13"
+                                Data="{Binding Source='avares://MatoEditor/Assets/X.svg', Converter={StaticResource SvgConverter}}"
+                                Foreground="{DynamicResource ForegroundColor}"/>
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </TabStrip.ItemTemplate>
+        </TabStrip>
+        
+        <Grid 
+            Grid.Row="1" 
             Grid.Column="{Binding EditorGridField.Column}" 
             Grid.ColumnSpan="{Binding EditorGridField.ColumnSpan}" 
             IsVisible="{Binding EditorVisible}">
@@ -160,7 +186,7 @@
                 </Interaction.Behaviors>
             </avaloniaEdit:TextEditor>
         </Grid>
-        <Panel Grid.Row="0" 
+        <Panel Grid.Row="1" 
                Grid.Column="{Binding ViewerGridField.Column}" 
                Grid.ColumnSpan="{Binding ViewerGridField.ColumnSpan}"
                IsVisible="{Binding ViewerVisible}"

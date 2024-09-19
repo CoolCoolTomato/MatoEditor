@@ -1,11 +1,17 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Controls;
 using AvaloniaEdit;
 using Markdown.Avalonia.Full;
+using MatoEditor.Dialogs;
+using MatoEditor.Models;
 using MatoEditor.Services;
 using ReactiveUI;
+using Ursa.Controls;
 
 namespace MatoEditor.ViewModels;
 
@@ -23,6 +29,8 @@ public class EditorViewModel : ViewModelBase
         InsertSymbolCommand = ReactiveCommand.Create<string>(InsertSymbol);
         
         ContentString = "";
+        FileTabs = new ObservableCollection<FileTab>();
+        DeleteFileTabCommand = ReactiveCommand.Create<string>(DeleteFileTab);
         
         EditorVisible = true;
         ViewerVisible = true;
@@ -48,11 +56,40 @@ public class EditorViewModel : ViewModelBase
                     Viewer.Markdown = "";
                     Viewer.Markdown = ContentString;
                 }
+                if (SelectedFileTab != null)
+                {
+                    this.SelectedFileTab.NewContentString = ContentString;
+                }
+            });
+        this.WhenAnyValue(x => x.SelectedFileTab.Path)
+            .Subscribe(path =>
+            {
+                if (path != null && path != "")
+                {
+                    _storageService.CurrentFilePath = path;
+                }
             });
         _storageService.WhenAnyValue(x => x.CurrentFilePath)
-            .Subscribe(CurrentFilePath =>
+            .Subscribe(async CurrentFilePath =>
             {
-                UpdateContentString(CurrentFilePath);
+                if (CurrentFilePath != null && CurrentFilePath != "")
+                {
+                    var fileTab = FindFileTab(CurrentFilePath);
+                    if (fileTab == null)
+                    {
+                        var content = await GetContentStringFormFile(CurrentFilePath);
+                        var newFileTab = new FileTab()
+                        {
+                            Name = Path.GetFileName(CurrentFilePath),
+                            Path = CurrentFilePath,
+                            OldContentString = content,
+                            NewContentString = content
+                        };
+                        FileTabs.Add(newFileTab);
+                    }
+                    SelectedFileTab = FindFileTab(CurrentFilePath);
+                    ContentString = SelectedFileTab.NewContentString;
+                }
             });
     }
     private readonly Window _window;
@@ -67,6 +104,20 @@ public class EditorViewModel : ViewModelBase
     {
         get => _contentString;
         set => this.RaiseAndSetIfChanged(ref _contentString, value);
+    }
+    private ObservableCollection<FileTab> _fileTabs;
+    public ObservableCollection<FileTab> FileTabs
+    {
+        get => _fileTabs;
+        set => this.RaiseAndSetIfChanged(ref _fileTabs, value);
+    }
+    public ICommand DeleteFileTabCommand { get; }
+
+    private FileTab _selectedFileTab;
+    public FileTab SelectedFileTab
+    {
+        get => _selectedFileTab;
+        set => this.RaiseAndSetIfChanged(ref _selectedFileTab, value);
     }
     public ICommand InsertSymbolCommand { get; }
     
@@ -137,15 +188,16 @@ public class EditorViewModel : ViewModelBase
         Editor.Document.Insert(caretOffset, symbol);
         Editor.CaretOffset = caretOffset + symbol.Length;
     }
-    private async void UpdateContentString(string filePath)
+    private async Task<string> GetContentStringFormFile(string filePath)
     {
-        ContentString = await _fileSystemService.ReadFileAsync(filePath);
+        return await _fileSystemService.ReadFileAsync(filePath);
     }
     public async Task SaveFile()
     {
-        if (_storageService.CurrentFilePath != "")
+        if (SelectedFileTab != null)
         {
-            _ = await _fileSystemService.WriteFileAsync(_storageService.CurrentFilePath, ContentString);
+            _ = await _fileSystemService.WriteFileAsync(SelectedFileTab.Path, SelectedFileTab.NewContentString);
+            SelectedFileTab.OldContentString = SelectedFileTab.NewContentString;
         }
     }
     public void SetEditorMode(string mode)
@@ -176,6 +228,45 @@ public class EditorViewModel : ViewModelBase
             EditorGridField.ColumnSpan = 1;
             ViewerGridField.Column = 1;
             ViewerGridField.ColumnSpan = 1;
+        }
+    }
+    private FileTab? FindFileTab(string path)
+    {
+        return FileTabs.FirstOrDefault(fileTab => fileTab.Path == path);
+    }
+    private async void DeleteFileTab(string path)
+    {
+        var fileTab = FindFileTab(path);
+        if (fileTab != null)
+        {
+            if (fileTab.OldContentString != fileTab.NewContentString)
+            {
+                var options = new DialogOptions()
+                {
+                    Title = "Do you want to save the file changes?",
+                    Mode = DialogMode.None,
+                    Button = DialogButton.OKCancel,
+                    ShowInTaskBar = false,
+                    IsCloseButtonVisible = true,
+                    StartupLocation = WindowStartupLocation.CenterOwner,
+                };
+                var baseDialogViewModel = new BaseDialogViewModel();
+                var result  = await Dialog.ShowModal<BaseDialog, BaseDialogViewModel>(baseDialogViewModel, options: options);
+                if (result == DialogResult.OK)
+                {
+                    var ok = await _fileSystemService.WriteFileAsync(fileTab.Path, fileTab.NewContentString);
+                    if (ok)
+                    {
+                        FileTabs.Remove(fileTab);
+                    }
+                }
+            }
+            FileTabs.Remove(fileTab);
+        }
+
+        if (SelectedFileTab == null)
+        {
+            ContentString = "";
         }
     }
 }
