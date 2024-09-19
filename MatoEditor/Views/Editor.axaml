@@ -13,6 +13,7 @@
              x:DataType="viewModels:EditorViewModel">
     <UserControl.Resources>
         <converters:SvgConverter x:Key="SvgConverter"/>
+        <converters:FileTabConverter x:Key="FileTabConverter"/>
     </UserControl.Resources>
     <Grid Background="{DynamicResource BackgroundColor}">
         <Grid.RowDefinitions>
@@ -34,10 +35,22 @@
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
-                        <Button Classes="editor" Command="{Binding $parent[UserControl].((viewModels:EditorViewModel)DataContext).DeleteFileTabCommand} " 
+                        <u:TwoTonePathIcon
+                            Width="6"
+                            Height="6"
+                            Margin="7 0 0 7"
+                            Data="{Binding Source='avares://MatoEditor/Assets/Point.svg', Converter={StaticResource SvgConverter}}"
+                            Foreground="{DynamicResource ForegroundColor}">
+                            <u:TwoTonePathIcon.IsVisible>
+                                <MultiBinding Converter="{StaticResource FileTabConverter}">
+                                    <Binding Path="OldContentString"/>
+                                    <Binding Path="NewContentString"/>
+                                </MultiBinding>
+                            </u:TwoTonePathIcon.IsVisible>
+                        </u:TwoTonePathIcon>
+                        <Button Classes="editor" Command="{Binding $parent[UserControl].((viewModels:EditorViewModel)DataContext).DeleteFileTabCommand} "
                                 CommandParameter="{Binding Path}"
-                                Foreground="{DynamicResource ForegroundColor}"
-                                Margin="10 0 0 0">
+                                Foreground="{DynamicResource ForegroundColor}">
                             <u:TwoTonePathIcon
                                 Width="13"
                                 Height="13"
