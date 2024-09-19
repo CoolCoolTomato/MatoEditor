@@ -152,12 +152,8 @@
                 Margin="5"
                 Name="TextEditor"
                 Foreground="{DynamicResource ForegroundColor}"
-                SyntaxHighlighting="C#"
                 HorizontalScrollBarVisibility="Auto"
                 VerticalScrollBarVisibility="Auto"
-                FontFamily="{DynamicResource CodeFontFamily}" 
-                FontWeight="Normal" 
-                FontSize="14"
                 WordWrap="True">
                 <Interaction.Behaviors>
                     <utils:AvalonEditBehavior Text="{Binding ContentString, Mode=TwoWay}"/>
@@ -169,7 +165,10 @@
                Grid.ColumnSpan="{Binding ViewerGridField.ColumnSpan}"
                IsVisible="{Binding ViewerVisible}"
                ZIndex="0">
-            <md:MarkdownScrollViewer Markdown="{Binding ContentString}">
+            <md:MarkdownScrollViewer
+                Name="MarkdownScrollViewer"
+                Margin="5"
+                MaxWidth="1000">
                 <md:MarkdownScrollViewer.Styles>
                     <StyleInclude Source="avares://MatoEditor/Styles/Styles.axaml"/>
                 </md:MarkdownScrollViewer.Styles>

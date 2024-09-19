@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Avalonia;
 using Avalonia.Controls;
-using Avalonia.Styling;
 using AvaloniaEdit;
+using Markdown.Avalonia.Full;
 using MatoEditor.Services;
 using ReactiveUI;
 
@@ -18,7 +17,9 @@ public class EditorViewModel : ViewModelBase
         _fileSystemService = fileSystemService;
         _storageService = storageService;
         
-        _textEditor = _window.FindControl<UserControl>("EditorUserControl").FindControl<TextEditor>("TextEditor");
+        Editor = _window.FindControl<UserControl>("EditorUserControl").FindControl<TextEditor>("TextEditor");
+        Editor.TextArea.TextView.LinkTextForegroundBrush = Editor.Foreground;
+        Viewer = _window.FindControl<UserControl>("EditorUserControl").FindControl<MarkdownScrollViewer>("MarkdownScrollViewer");
         InsertSymbolCommand = ReactiveCommand.Create<string>(InsertSymbol);
         
         ContentString = "";
@@ -35,6 +36,19 @@ public class EditorViewModel : ViewModelBase
             Column = 1,
             ColumnSpan = 1
         };
+        this.WhenAnyValue(x => x.ContentString)
+            .Subscribe(ContentString =>
+            {
+                try
+                {
+                    Viewer.Markdown = ContentString;
+                }
+                catch (Exception e)
+                {
+                    Viewer.Markdown = "";
+                    Viewer.Markdown = ContentString;
+                }
+            });
         _storageService.WhenAnyValue(x => x.CurrentFilePath)
             .Subscribe(CurrentFilePath =>
             {
@@ -45,13 +59,15 @@ public class EditorViewModel : ViewModelBase
     private readonly IFileSystemService _fileSystemService;
     private StorageService _storageService;
     
+    public TextEditor Editor { get; set; }
+    public MarkdownScrollViewer Viewer { get; set; }
+    
     private string _contentString;
     public string ContentString
     {
         get => _contentString;
         set => this.RaiseAndSetIfChanged(ref _contentString, value);
     }
-    private TextEditor _textEditor { get; set; }
     public ICommand InsertSymbolCommand { get; }
     
     private bool _editorVisible;
@@ -117,9 +133,9 @@ public class EditorViewModel : ViewModelBase
     }
     private void InsertSymbol(string symbol)
     {
-        var caretOffset = _textEditor.CaretOffset;
-        _textEditor.Document.Insert(caretOffset, symbol);
-        _textEditor.CaretOffset = caretOffset + symbol.Length;
+        var caretOffset = Editor.CaretOffset;
+        Editor.Document.Insert(caretOffset, symbol);
+        Editor.CaretOffset = caretOffset + symbol.Length;
     }
     private async void UpdateContentString(string filePath)
     {

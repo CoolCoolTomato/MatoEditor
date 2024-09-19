@@ -68,10 +68,12 @@ public class NavigationViewModel : ViewModelBase
         if (Application.Current.RequestedThemeVariant == ThemeVariant.Light)
         {
             Application.Current.RequestedThemeVariant = ThemeVariant.Dark;
+            _editorViewModel.Editor.TextArea.TextView.LinkTextForegroundBrush = _editorViewModel.Editor.Foreground;
         }
         else
         {
             Application.Current.RequestedThemeVariant = ThemeVariant.Light;
+            _editorViewModel.Editor.TextArea.TextView.LinkTextForegroundBrush = _editorViewModel.Editor.Foreground;
         }
     }
     private void SetEditorMode(string mode)
