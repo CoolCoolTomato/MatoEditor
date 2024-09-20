@@ -18,6 +18,8 @@ public class NavigationViewModel : ViewModelBase
         _storageService = storageService;
         _configurationService = configurationService;
         _editorViewModel = editorViewModel;
+
+        IsLight = Application.Current.RequestedThemeVariant == ThemeVariant.Light;
         
         SelectDirectoryCommand = ReactiveCommand.CreateFromTask(SelectDirectory);
         SaveFileCommand = ReactiveCommand.CreateFromTask(SaveFile);
@@ -40,6 +42,13 @@ public class NavigationViewModel : ViewModelBase
     {
         get => _filePath;
         set => this.RaiseAndSetIfChanged(ref _filePath, value);
+    }
+
+    private bool _isLight;
+    public bool IsLight
+    {
+        get => _isLight;
+        set => this.RaiseAndSetIfChanged(ref _isLight, value);
     }
     public ICommand SelectDirectoryCommand { get; }
     public ICommand SaveFileCommand { get; }
@@ -65,15 +74,17 @@ public class NavigationViewModel : ViewModelBase
     }
     private void ChangeTheme()
     {
-        if (Application.Current.RequestedThemeVariant == ThemeVariant.Light)
+        if (IsLight)
         {
             Application.Current.RequestedThemeVariant = ThemeVariant.Dark;
             _editorViewModel.Editor.TextArea.TextView.LinkTextForegroundBrush = _editorViewModel.Editor.Foreground;
+            IsLight = false;
         }
         else
         {
             Application.Current.RequestedThemeVariant = ThemeVariant.Light;
             _editorViewModel.Editor.TextArea.TextView.LinkTextForegroundBrush = _editorViewModel.Editor.Foreground;
+            IsLight = true;
         }
     }
     private void SetEditorMode(string mode)

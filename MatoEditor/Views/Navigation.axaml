@@ -43,13 +43,27 @@
                 </StackPanel>
             </Button>
             <Button Classes="navigation" Command="{Binding ChangeThemeCommand}">
-                <TextBlock Text="O"/>
+                <Panel>
+                    <u:TwoTonePathIcon
+                        IsVisible="{Binding IsLight}"
+                        Width="13"
+                        Height="13"
+                        Data="{Binding Source='avares://MatoEditor/Assets/Light.svg', Converter={StaticResource SvgConverter}}"
+                        Foreground="{DynamicResource ForegroundColor}"/>
+                    <u:TwoTonePathIcon
+                        IsVisible="{Binding !IsLight}"
+                        Width="13"
+                        Height="13"
+                        Data="{Binding Source='avares://MatoEditor/Assets/Dark.svg', Converter={StaticResource SvgConverter}}"
+                        Foreground="{DynamicResource ForegroundColor}"/>
+                </Panel>
             </Button>
         </StackPanel>
         <StackPanel Grid.Column="2" Orientation="Horizontal">
             <u:TwoTonePathIcon
                 Width="13"
                 Height="13"
+                Margin="0 0 5 0"
                 Data="{Binding Source='avares://MatoEditor/Assets/Path.svg', Converter={StaticResource SvgConverter}}"
                 Foreground="{DynamicResource ForegroundColor}"/>
             <TextBlock 
