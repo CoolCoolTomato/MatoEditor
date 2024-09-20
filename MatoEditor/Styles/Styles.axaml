@@ -63,6 +63,13 @@
     <Style Selector="TabStripItem:selected /template/ Border#PART_SelectedPipe">
         <Setter Property="Background" Value="{DynamicResource ForegroundColor}"/>
     </Style>
+    
+    <Style Selector="ScrollViewer /template/ ScrollBar:horizontal">
+        <Setter Property="Height" Value="5"/>
+    </Style>
+    <Style Selector="ScrollViewer /template/ ScrollBar:horizontal Thumb">
+        <Setter Property="Height" Value="5"/>
+    </Style>
     <!-- Markdown Styles -->
     <Style Selector="Border.Blockquote">
         <Setter Property="Margin" Value="0 10 0 10"/>

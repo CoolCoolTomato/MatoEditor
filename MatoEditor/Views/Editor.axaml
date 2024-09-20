@@ -25,42 +25,47 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         
-        <TabStrip 
+        <ScrollViewer
             Grid.Row="0" 
             Grid.Column="0" 
-            Grid.ColumnSpan="2" 
-            ItemsSource="{Binding FileTabs}"
-            SelectedItem="{Binding SelectedFileTab}">
-            <TabStrip.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
-                        <u:TwoTonePathIcon
-                            Width="6"
-                            Height="6"
-                            Margin="7 0 0 7"
-                            Data="{Binding Source='avares://MatoEditor/Assets/Point.svg', Converter={StaticResource SvgConverter}}"
-                            Foreground="{DynamicResource ForegroundColor}">
-                            <u:TwoTonePathIcon.IsVisible>
-                                <MultiBinding Converter="{StaticResource FileTabConverter}">
-                                    <Binding Path="OldContentString"/>
-                                    <Binding Path="NewContentString"/>
-                                </MultiBinding>
-                            </u:TwoTonePathIcon.IsVisible>
-                        </u:TwoTonePathIcon>
-                        <Button Classes="editor" Command="{Binding $parent[UserControl].((viewModels:EditorViewModel)DataContext).DeleteFileTabCommand} "
-                                CommandParameter="{Binding Path}"
-                                Foreground="{DynamicResource ForegroundColor}">
+            Grid.ColumnSpan="2"
+            HorizontalScrollBarVisibility="Auto"
+            VerticalScrollBarVisibility="Disabled">
+            <TabStrip 
+                Margin="0 0 0 10"
+                ItemsSource="{Binding FileTabs}"
+                SelectedItem="{Binding SelectedFileTab}">
+                <TabStrip.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}" VerticalAlignment="Center"/>
                             <u:TwoTonePathIcon
-                                Width="13"
-                                Height="13"
-                                Data="{Binding Source='avares://MatoEditor/Assets/X.svg', Converter={StaticResource SvgConverter}}"
-                                Foreground="{DynamicResource ForegroundColor}"/>
-                        </Button>
-                    </StackPanel>
-                </DataTemplate>
-            </TabStrip.ItemTemplate>
-        </TabStrip>
+                                Width="6"
+                                Height="6"
+                                Margin="7 0 0 7"
+                                Data="{Binding Source='avares://MatoEditor/Assets/Point.svg', Converter={StaticResource SvgConverter}}"
+                                Foreground="{DynamicResource ForegroundColor}">
+                                <u:TwoTonePathIcon.IsVisible>
+                                    <MultiBinding Converter="{StaticResource FileTabConverter}">
+                                        <Binding Path="OldContentString"/>
+                                        <Binding Path="NewContentString"/>
+                                    </MultiBinding>
+                                </u:TwoTonePathIcon.IsVisible>
+                            </u:TwoTonePathIcon>
+                            <Button Classes="editor" Command="{Binding $parent[UserControl].((viewModels:EditorViewModel)DataContext).DeleteFileTabCommand} "
+                                    CommandParameter="{Binding Path}"
+                                    Foreground="{DynamicResource ForegroundColor}">
+                                <u:TwoTonePathIcon
+                                    Width="13"
+                                    Height="13"
+                                    Data="{Binding Source='avares://MatoEditor/Assets/X.svg', Converter={StaticResource SvgConverter}}"
+                                    Foreground="{DynamicResource ForegroundColor}"/>
+                            </Button>
+                        </StackPanel>
+                    </DataTemplate>
+                </TabStrip.ItemTemplate>
+            </TabStrip>
+        </ScrollViewer>
         
         <Grid 
             Grid.Row="1" 
