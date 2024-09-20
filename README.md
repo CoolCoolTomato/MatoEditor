@@ -5,7 +5,7 @@
 
 ## Getting Started
 
-
+Download executable files from [Releases](https://github.com/CoolCoolTomato/MatoEditor/releases)
 
 ### Light
 
