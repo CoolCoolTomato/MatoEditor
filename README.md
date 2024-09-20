@@ -23,5 +23,7 @@ Download executable files from [Releases](https://github.com/CoolCoolTomato/Mato
 ## Credits
 
 [Avalonia](https://github.com/AvaloniaUI/Avalonia)
+
 [Semi.Avalonia](https://github.com/irihitech/Semi.Avalonia)
+
 [Ursa.Avalonia](https://github.com/irihitech/Ursa.Avalonia)
