@@ -50,8 +50,18 @@
     <Style Selector="Button:pointerover">
         <Setter Property="Cursor" Value="Hand"/>
     </Style>
+    
+    <Style Selector="TabStrip">
+        
+    </Style>
+    <Style Selector="TabStrip /template/ Border#PART_BorderSeparator">
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    <Style Selector="TabStripItem:pointerover /template/ Border#PART_SelectedPipe">
+        <Setter Property="Background" Value="{DynamicResource BackgroundColor3}"/>
+    </Style>
     <Style Selector="TabStripItem:selected /template/ Border#PART_SelectedPipe">
-        <Setter Property="Background" Value="{DynamicResource ForegroundColor}" />
+        <Setter Property="Background" Value="{DynamicResource ForegroundColor}"/>
     </Style>
     <!-- Markdown Styles -->
     <Style Selector="Border.Blockquote">

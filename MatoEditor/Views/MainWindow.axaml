@@ -13,8 +13,12 @@
     <Design.DataContext>
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-    <DockPanel>
-        <views:Navigation DataContext="{Binding NavigationViewModel}" DockPanel.Dock="Top"/>
+    <DockPanel Background="{DynamicResource BackgroundColor}">
+        <views:Navigation 
+            DataContext="{Binding NavigationViewModel}" 
+            DockPanel.Dock="Top"
+            BorderBrush="{DynamicResource BackgroundColor3}"
+            BorderThickness="0 0 0 2"/>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="120" MaxWidth="500" Width="Auto"/>
@@ -23,7 +27,7 @@
             </Grid.ColumnDefinitions>
             
             <views:DocumentTree Grid.Column="0" DataContext="{Binding DocumentTreeViewModel}"/>
-            <GridSplitter Grid.Column="1" Background="{DynamicResource ForegroundColor}"/>
+            <GridSplitter Grid.Column="1" Background="{DynamicResource BackgroundColor3}"/>
             <views:Editor Grid.Column="2" Name="EditorUserControl" DataContext="{Binding EditorViewModel}"/>
         </Grid>
     </DockPanel>
