@@ -183,7 +183,7 @@
                         Data="{Binding Source='avares://MatoEditor/Assets/CodeBlock.svg', Converter={StaticResource SvgConverter}}"
                         Foreground="{DynamicResource ForegroundColor}"/>
                 </Button>
-                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="">
+                <Button Classes="editor" Command="{Binding InsertSymbolCommand}" CommandParameter="table">
                     <u:TwoTonePathIcon
                         Width="13"
                         Height="13"

@@ -182,9 +182,60 @@ public class EditorViewModel : ViewModelBase
             set => this.RaiseAndSetIfChanged(ref _columnSpan, value);
         }
     }
-    private void InsertSymbol(string symbol)
+    private async void InsertSymbol(string symbol)
     {
         var caretOffset = Editor.CaretOffset;
+        if (symbol == "table")
+        {
+            var options = new DialogOptions()
+            {
+                Title = "Create Table",
+                Mode = DialogMode.None,
+                Button = DialogButton.OKCancel,
+                ShowInTaskBar = false,
+                IsCloseButtonVisible = true,
+                StartupLocation = WindowStartupLocation.CenterOwner,
+            };
+            var twoTextBoxDialogViewModel = new TwoNumberBoxDialogViewModel()
+            {
+                Label1 = "Row",
+                Label2 = "Column",
+            };
+            var result  = await Dialog.ShowModal<TwoNumberBoxDialog, TwoNumberBoxDialogViewModel>(twoTextBoxDialogViewModel, options: options);
+            if (result == DialogResult.OK)
+            {
+                var row = twoTextBoxDialogViewModel.Number1;
+                var column = twoTextBoxDialogViewModel.Number2;
+                var sb = new System.Text.StringBuilder();
+
+                for (int i = 0; i < column; i++)
+                {
+                    sb.Append("| ");
+                }
+                sb.AppendLine("|");
+
+                for (int i = 0; i < column; i++)
+                {
+                    sb.Append("| --- ");
+                }
+                sb.AppendLine("|");
+
+                for (int i = 0; i < row; i++)
+                {
+                    for (int j = 0; j < column; j++)
+                    {
+                        sb.Append("| ");
+                    }
+                    sb.AppendLine("|");
+                }
+
+                symbol = sb.ToString();
+            }
+            else
+            {
+                return;
+            }
+        }
         Editor.Document.Insert(caretOffset, symbol);
         Editor.CaretOffset = caretOffset + symbol.Length;
     }
