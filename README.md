@@ -5,7 +5,7 @@
 
 ## Getting Started
 
-
+Download executable files from [Releases](https://github.com/CoolCoolTomato/MatoEditor/releases)
 
 ### Light
 
@@ -23,5 +23,7 @@
 ## Credits
 
 [Avalonia](https://github.com/AvaloniaUI/Avalonia)
+
 [Semi.Avalonia](https://github.com/irihitech/Semi.Avalonia)
+
 [Ursa.Avalonia](https://github.com/irihitech/Ursa.Avalonia)
