@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
+using Avalonia;
+using Avalonia.Styling;
 using ReactiveUI;
 
 namespace MatoEditor.Services;
@@ -34,6 +36,8 @@ public class ConfigurationService : ReactiveObject
         if (config != null && !string.IsNullOrEmpty(config.LastOpenedDirectory))
         {
             _storageService.RootDirectoryPath = config.LastOpenedDirectory;
+            Application.Current.RequestedThemeVariant =
+                config.Theme == "Light" ? ThemeVariant.Light : ThemeVariant.Dark;
         }
     }
 
@@ -41,7 +45,8 @@ public class ConfigurationService : ReactiveObject
     {
         var config = new EditorConfig
         {
-            LastOpenedDirectory = _storageService.RootDirectoryPath
+            LastOpenedDirectory = _storageService.RootDirectoryPath,
+            Theme = Application.Current.RequestedThemeVariant == ThemeVariant.Light ? "Light" : "Dark"
         };
 
         var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
@@ -53,7 +58,8 @@ public class ConfigurationService : ReactiveObject
     {
         var defaultConfig = new EditorConfig
         {
-            LastOpenedDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)
+            LastOpenedDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            Theme = Application.Current.RequestedThemeVariant == ThemeVariant.Light ? "Light" : "Dark"
         };
 
         var json = JsonSerializer.Serialize(defaultConfig, new JsonSerializerOptions { WriteIndented = true });
@@ -65,4 +71,5 @@ public class ConfigurationService : ReactiveObject
 public class EditorConfig
 {
     public string LastOpenedDirectory { get; set; }
+    public string Theme { get; set; }
 }

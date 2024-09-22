@@ -86,6 +86,7 @@ public class NavigationViewModel : ViewModelBase
             _editorViewModel.Editor.TextArea.TextView.LinkTextForegroundBrush = _editorViewModel.Editor.Foreground;
             IsLight = true;
         }
+        _configurationService.SaveConfiguration();
     }
     private void SetEditorMode(string mode)
     {
