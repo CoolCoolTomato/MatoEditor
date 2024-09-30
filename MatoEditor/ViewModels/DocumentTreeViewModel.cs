@@ -229,8 +229,9 @@ public class DocumentTreeViewModel : ViewModelBase
             if (currentNode != null)
             {
                 currentNode.Name = textBoxDialogViewModel.Content;
-                currentNode.Path = Path.GetDirectoryName(node.Path) + "/" + textBoxDialogViewModel.Content;
-                await _fileSystemService.RenameDirectoryAsync(node.Path, currentNode.Path);
+                var newPath = Path.GetDirectoryName(node.Path) + "/" + textBoxDialogViewModel.Content;
+                await _fileSystemService.RenameDirectoryAsync(node.Path, newPath);
+                currentNode.Path = newPath;
             }
         }
     }
@@ -310,8 +311,9 @@ public class DocumentTreeViewModel : ViewModelBase
             if (currentNode != null)
             {
                 currentNode.Name = textBoxDialogViewModel.Content;
-                currentNode.Path = Path.GetDirectoryName(node.Path) + "/" + textBoxDialogViewModel.Content;
-                await _fileSystemService.RenameDirectoryAsync(node.Path, currentNode.Path);
+                var newPath = Path.GetDirectoryName(node.Path) + "/" + textBoxDialogViewModel.Content;
+                await _fileSystemService.RenameDirectoryAsync(node.Path, newPath);
+                currentNode.Path = newPath;
             }
         }
     }

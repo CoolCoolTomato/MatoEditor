@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Controls;
+using Avalonia.Input;
 using AvaloniaEdit;
 using Markdown.Avalonia.Full;
 using MatoEditor.Dialogs;
@@ -25,6 +26,8 @@ public class EditorViewModel : ViewModelBase
         
         Editor = _window.FindControl<UserControl>("EditorUserControl").FindControl<TextEditor>("TextEditor");
         Editor.TextArea.TextView.LinkTextForegroundBrush = Editor.Foreground;
+        Editor.KeyDown += Editor_KeyDown;
+
         Viewer = _window.FindControl<UserControl>("EditorUserControl").FindControl<MarkdownScrollViewer>("MarkdownScrollViewer");
         InsertSymbolCommand = ReactiveCommand.Create<string>(InsertSymbol);
         
@@ -249,6 +252,14 @@ public class EditorViewModel : ViewModelBase
         {
             _ = await _fileSystemService.WriteFileAsync(SelectedFileTab.Path, SelectedFileTab.NewContentString);
             SelectedFileTab.OldContentString = SelectedFileTab.NewContentString;
+        }
+    }
+    private void Editor_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.S && e.KeyModifiers == KeyModifiers.Control)
+        {
+            SaveFile();
+            e.Handled = true;
         }
     }
     public void SetEditorMode(string mode)
